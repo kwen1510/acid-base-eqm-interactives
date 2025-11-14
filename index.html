@@ -2,9 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Acid-Base Equilibria Interactives</title>
+  <title>Acid–Base Equilibria Interactives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: #f4f6fa;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 22px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2b64ff;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: #555;
+    }
+  </style>
 </head>
+
 <body>
-  <p>This page contains interactives to help you learn acid base equilibria.</p>
+
+  <header>
+    <h1>Acid–Base Equilibria Interactives</h1>
+    <p>This page contains interactives to help you learn acid–base equilibria.</p>
+  </header>
+
+  <div class="container">
+
+    <!-- CARD 1 -->
+    <a class="card" href="https://kwen1510.github.io/acid-base-eqm-interactives/algorithms-basic.html">
+      <div class="card-title">Basic Algorithms</div>
+      <div class="card-desc">Interactive walkthrough of the core algorithms for acid–base equilibrium calculations.</div>
+    </a>
+
+    <!-- CARD TEMPLATE FOR FUTURE EXPANSION -->
+    <!--
+    <a class="card" href="#">
+      <div class="card-title">Title of Next Interactive</div>
+      <div class="card-desc">Short description of what it does.</div>
+    </a>
+    -->
+
+  </div>
+
 </body>
 </html>
