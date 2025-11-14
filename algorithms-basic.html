@@ -1,1 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Acid-Base Algorithm – Choice of Calculation</title>
+    <style>
+      :root {
+        --accent: #0f766e;
+        --accent-soft: #ecfdf5;
+        --accent-strong: #0d9488;
+        --accent-teal: #14b8a6;
+        --accent-orange: #f97316;
+        --accent-orange-dark: #ea580c;
+        --border-subtle: #e5e7eb;
+        --bg-page: #f3f4f6;
+        --bg-card: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+      }
 
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: var(--bg-page);
+        color: var(--text-main);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin-top: 0;
+      }
+
+      .app {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        padding: 1.5rem 2rem 2rem;
+        border-radius: 14px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+      }
+
+      .layout {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .layout-left {
+        flex: 0 0 270px;
+        border-right: 1px solid var(--border-subtle);
+        padding-right: 1.25rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .layout-right {
+        flex: 1 1 auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scroll-behavior: smooth;
+      }
+
+      .section {
+        margin-top: 1rem;
+      }
+
+      .step-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .step-label-pill {
+        padding: 0.25rem 0.9rem;
+        border-radius: 999px;
+        background: #e5e7eb;
+        color: #111827;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      .step-label-caption {
+        font-size: 0.85rem;
+      }
+
+      .step-label.active .step-label-pill {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+      }
+
+      .step-label.active .step-label-caption {
+        color: var(--accent-strong);
+      }
+
+      .stepper {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-top: 1.25rem;
+        font-size: 0.8rem;
+        justify-content: center;
+      }
+
+      .stepper-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+      }
+
+      .stepper-step.disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      .stepper-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        background: #fff;
+        transition: background 180ms ease, border-color 180ms ease,
+          box-shadow 180ms ease, transform 180ms ease;
+      }
+
+      .stepper-step.current .stepper-dot {
+        border-color: var(--accent);
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+        transform: scale(1.08);
+      }
+
+      .stepper-step.completed .stepper-dot {
+        border-color: var(--accent-teal);
+        background: var(--accent-teal);
+      }
+
+      .stepper-line {
+        flex: 1 1 auto;
+        height: 2px;
+        background: var(--border-subtle);
+        margin-top: 13px;
+        border-radius: 999px;
+      }
+
+      .stepper-step span {
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      .stepper-step.completed + .stepper-line,
+      .stepper-step.current + .stepper-line {
+        background: var(--accent-teal);
+      }
+
+      .step-panel {
+        opacity: 0;
+        transition: opacity 220ms ease-in-out;
+      }
+
+      .step-panel.visible {
+        opacity: 1;
+      }
+
+      .card-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .card {
+        border: 1px solid #e5e7eb;
+        border-radius: 999px;
+        padding: 0.7rem 1.2rem;
+        flex: 1 1 200px;
+        cursor: pointer;
+        background: #f9fafb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: background 160ms ease, border-color 160ms ease,
+          box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
+      }
+
+      .card.selected {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
+        transform: translateY(-1px);
+      }
+
+      .card h3 {
+        margin: 0 0 0.25rem;
+        font-size: 1rem;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+
+      .options-list {
+        margin-top: 0.5rem;
+      }
+
+      .options-list label {
+        display: block;
+        margin-bottom: 0.4rem;
+        cursor: pointer;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.35rem 0.5rem;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      .summary {
+        display: none;
+      }
+
+      .case-pill {
+        display: block;
+        padding: 0.65rem 1rem;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        font-size: 0.9rem;
+        text-align: center;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, color 150ms ease;
+      }
+
+      .options-list label:hover .case-pill {
+        background: #e7f0ff;
+        border-color: #bfdbfe;
+        box-shadow: 0 0 0 2px #dbeafe;
+      }
+
+      .case-pill.selected {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent-strong);
+        box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.35);
+      }
+
+      .buttons {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+
+      button {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+      }
+
+      button[disabled] {
+        opacity: 0.45;
+        cursor: default;
+      }
+
+      button.secondary {
+        background: #fff;
+        color: var(--accent);
+      }
+
+      button:hover:not([disabled]) {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        transform: translateY(-1px);
+      }
+
+      button.secondary:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+      }
+
+      .classification {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background: #fafafa;
+      }
+
+      .decision-question {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+      }
+
+      .decision-options {
+        margin-top: 0.5rem;
+      }
+
+      .decision-options label {
+        display: block;
+        margin-bottom: 0.35rem;
+        cursor: pointer;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        transition: background 160ms ease, border-color 160ms ease,
+          box-shadow 160ms ease, transform 120ms ease;
+      }
+
+      .decision-options label:hover {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+        box-shadow: 0 0 0 2px #e0e7ff;
+        transform: translateY(-1px);
+      }
+
+      .decision-options label.selected {
+        background: var(--accent-soft);
+        border-color: var(--accent-strong);
+        box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.35);
+        color: var(--accent-strong);
+      }
+
+      .decision-options label.wrong {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        box-shadow: 0 0 0 2px #fee2e2;
+        color: #b91c1c;
+      }
+
+      .decision-options input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .decision-feedback {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .mixture-summary {
+        margin-top: 0.75rem;
+        padding: 0;
+        border-radius: 999px;
+        border: none;
+        background: transparent;
+        font-size: 0.88rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .mixture-summary-row {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .mixture-pill {
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background: #ecfdf5;
+        border: 1px solid rgba(20, 184, 166, 0.35);
+        font-size: 0.8rem;
+        color: var(--accent-strong);
+      }
+
+      .mixture-summary strong {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-muted);
+      }
+
+      .decision-tree {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .tree-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .tree-level {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+
+      .tree-level + .tree-level {
+        margin-top: 0.5rem;
+      }
+
+      .tree-node {
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid #ccc;
+        background: #f7f7f7;
+        min-width: 150px;
+        text-align: center;
+        transition: box-shadow 160ms ease, border-color 160ms ease,
+          background 160ms ease, transform 120ms ease;
+      }
+
+      .tree-node.root {
+        font-weight: 600;
+        background: #f0f4ff;
+      }
+
+      .tree-node.decision {
+        font-size: 0.85rem;
+      }
+
+      .tree-node.leaf {
+        cursor: default;
+      }
+
+      .tree-node.highlight {
+        box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.95);
+        border-color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .tree-node.leaf.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .tree-connector {
+        width: 1px;
+        background: #bbb;
+        height: 14px;
+        margin: 0.15rem 0;
+      }
+
+      .tree-branch-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2.5rem;
+      }
+
+      .tree-branch-horizontal {
+        height: 1px;
+        background: #bbb;
+        flex: 1 1 auto;
+      }
+
+      .tree-branch-joint {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #bbb;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-backdrop.show {
+        display: flex;
+      }
+
+      .modal {
+        background: #fff;
+        padding: 1.25rem 1.5rem 1.5rem;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+      }
+
+      #modal-body p {
+        margin: 0.35rem 0 0.75rem;
+        line-height: 1.5;
+        font-size: 0.92rem;
+      }
+
+      #modal-body ol {
+        margin: 0.25rem 0 0.75rem 1.25rem;
+        padding: 0;
+        font-size: 0.9rem;
+      }
+
+      #modal-body table {
+        margin: 0.75rem 0;
+        font-size: 0.85rem;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        position: relative;
+      }
+
+      .modal-header h3 {
+        margin: 0;
+      }
+
+      .close-btn {
+        border: none;
+        background: transparent;
+        font-size: 1rem;
+        cursor: pointer;
+        position: absolute;
+        top: 6px;
+        right: 10px;
+      }
+
+      .top-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.75rem;
+        gap: 0.75rem;
+      }
+
+      #restart-btn {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.95rem;
+        border-radius: 999px;
+        border: none;
+        background: var(--accent-orange);
+        color: #fff;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      #restart-btn:hover {
+        background: var(--accent-orange-dark);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>Acid-Base Algorithm &mdash; Level 1</h1>
+      <p>
+        Use the right panel to move through the guided steps for each mixture. The
+        tree and progress bar on the left are there as a visual map and
+        reference, and the mixture strip and Restart button below help you keep
+        track of your current setup. <b>Please interact with the panel on the right.</b>
+      </p>
+
+      <div class="layout">
+        <div class="layout-left">
+          <h2>Flow of decisions</h2>
+          <p style="font-size: 0.9rem;">
+            Follow the path down the tree. As you choose reagents and volumes on
+            the right, the final calculation highlighted here will update.
+          </p>
+          <div class="decision-tree">
+          <div class="tree-column">
+            <div class="tree-level">
+              <div class="tree-node root">
+                Start: What is in the mixture?
+              </div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-connector"></div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node decision">
+                Focus only on CH₃COOH and CH₃COO⁻
+              </div>
+            </div>
+              <div class="tree-level">
+              <div class="tree-connector"></div>
+            </div>
+            <div class="tree-level tree-branch-row">
+              <div class="tree-branch-horizontal"></div>
+              <div class="tree-branch-joint"></div>
+              <div class="tree-branch-horizontal"></div>
+            </div>
+            <div class="tree-level">
+              <div class="tree-node leaf" data-node="weak-acid">
+                Weak acid dissociation calculation<br />
+                (CH₃COOH only)
+              </div>
+              <div class="tree-node leaf" data-node="buffer">
+                Buffer calculation<br />
+                (CH₃COOH + CH₃COO⁻)
+              </div>
+              <div class="tree-node leaf" data-node="salt-hydrolysis">
+                Salt hydrolysis calculation<br />
+                (CH₃COO⁻ only)
+              </div>
+            </div>
+          </div>
+          <div class="stepper" id="stepper">
+            <div class="stepper-step current" data-step="1">
+              <div class="stepper-dot"></div>
+              <span>Choose reagents</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step disabled" data-step="2">
+              <div class="stepper-dot"></div>
+              <span>Choose volumes</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step disabled" data-step="3">
+              <div class="stepper-dot"></div>
+              <span>Predict mixture</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step disabled" data-step="4">
+              <div class="stepper-dot"></div>
+              <span>Reaction &amp; model</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step disabled" data-step="5">
+              <div class="stepper-dot"></div>
+              <span>Derivation</span>
+            </div>
+          </div>
+          <div class="top-actions">
+            <div
+              class="mixture-summary"
+              id="step3-setup"
+              style="margin-top: 0; flex: 1 1 auto;"
+              hidden
+            >
+              <div><strong>Mixture chosen (before reaction):</strong></div>
+              <div class="mixture-summary-row" id="step3-setup-row"></div>
+            </div>
+            <button id="restart-btn">Restart</button>
+          </div>
+        </div>
+        </div>
+
+        <div class="layout-right">
+          <!-- Step 1: choose reagent set -->
+          <div class="section step-panel" id="step-1">
+            <div class="step-label" data-step-label="1">
+              <span class="step-label-pill">Step 1 of 4</span>
+              <span class="step-label-caption">Choose one mixture to explore.</span>
+            </div>
+            <h2>Step 1: What is in the initial reaction mixture?</h2>
+            <p>Select the set of reagents placed together.</p>
+            <div class="card-row">
+              <div class="card" data-reagent-set="acid">
+                <h3>CH₃COOH only</h3>
+                <p>Only a weak acid is present.</p>
+              </div>
+              <div class="card" data-reagent-set="acid-base">
+                <h3>NaOH + CH₃COOH</h3>
+                <p>Strong base with a weak acid.</p>
+              </div>
+              <div class="card" data-reagent-set="acid-salt">
+                <h3>CH₃COOH + CH₃COO⁻Na⁺</h3>
+                <p>Weak acid and its conjugate base (a buffer pair).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: choose specific concentrations / volumes -->
+          <div class="section step-panel" id="step-2" hidden>
+            <div class="step-label" data-step-label="2">
+              <span class="step-label-pill">Step 2 of 4</span>
+              <span class="step-label-caption">Pick a volume combination.</span>
+            </div>
+            <h2>Step 2: Choose the concentrations and volumes</h2>
+            <p id="step-2-description"></p>
+            <div class="options-list" id="case-options"></div>
+            <div class="summary" id="case-summary"></div>
+          </div>
+
+          <!-- Step 3: predict mixture -->
+          <div class="section step-panel" id="step-3" hidden>
+            <div class="step-label" data-step-label="3">
+              <span class="step-label-pill">Step 3 of 4</span>
+              <span class="step-label-caption">Decide what is left in solution.</span>
+            </div>
+            <h2>Step 3: Predict what is left</h2>
+            <p>
+              Before you see any calculations, think about the chemistry and
+              decide what is left in solution.
+            </p>
+            <div class="decision-question">
+              <p>
+                Looking only at CH₃COOH and CH₃COO⁻ (ignore H₂O and Na⁺), what is
+                left in the mixture <em>after</em> any reaction?
+              </p>
+              <div class="decision-options" id="student-decision-options">
+                <label>
+                  <input
+                    type="radio"
+                    name="student-decision"
+                    value="weak-acid"
+                  />
+                  Only CH₃COOH is present
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="student-decision"
+                    value="salt-hydrolysis"
+                  />
+                  Only CH₃COO⁻ is present
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="student-decision"
+                    value="buffer"
+                  />
+                  A mixture of CH₃COOH and CH₃COO⁻ is present
+                </label>
+              </div>
+            <div class="decision-feedback" id="decision-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Step 4: choose calculation, then show model -->
+          <div class="section step-panel" id="step-4" hidden>
+            <div class="step-label" data-step-label="4">
+              <span class="step-label-pill">Step 4 of 4</span>
+              <span class="step-label-caption">Choose the type of calculation.</span>
+            </div>
+            <h2>Step 4: Check reaction and choose the calculation</h2>
+            <p>
+              Now decide which type of calculation is appropriate for this
+              mixture, using the decision tree on the left as a guide.
+            </p>
+            <div class="classification" id="reaction-block">
+              <p id="reaction-text"></p>
+              <div id="reaction-table-container"></div>
+            </div>
+            <div
+              class="decision-question"
+              id="calc-question"
+              style="margin-top: 0.75rem"
+            >
+              <p>
+                Based on what is left, which type of calculation should you use
+                for this mixture?
+              </p>
+                <div class="decision-options" id="calc-decision-options">
+                  <label>
+                    <input
+                      type="radio"
+                      name="calc-decision"
+                      value="weak-acid"
+                    />
+                    Weak acid dissociation calculation
+                  </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="calc-decision"
+                    value="buffer"
+                  />
+                  Buffer calculation
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="calc-decision"
+                    value="salt-hydrolysis"
+                  />
+                  Salt hydrolysis calculation
+                </label>
+              </div>
+              <div class="decision-feedback" id="calc-decision-feedback"></div>
+            </div>
+            <div class="classification" id="classification-box" hidden></div>
+            <div class="buttons" style="justify-content: flex-start; margin-top: 1rem;">
+              <button id="show-working-btn" class="secondary">
+                Show step-by-step working
+              </button>
+            </div>
+            <div class="buttons" id="right-restart-container" style="justify-content: flex-start; margin-top: 0.5rem;" hidden>
+              <button id="restart-btn-right" class="secondary">
+                Restart
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 5: derivation modal trigger -->
+          <div class="section step-panel" id="step-5" hidden>
+            <h2>Step 5: Explore the equation derivation</h2>
+            <p>
+              Click the button below to see a step-by-step derivation for this
+              type of mixture.
+            </p>
+            <button id="open-derivation">Show derivation steps</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Derivation modal -->
+      <div class="modal-backdrop" id="modal-backdrop">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-header">
+          <h3 id="modal-title">Derivation</h3>
+          <button class="close-btn" id="close-modal" aria-label="Close derivation">
+            ×
+          </button>
+        </div>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <script>
+      const Ka = 1.8e-5;
+
+      const scenarios = {
+        acid: {
+          label: "CH₃COOH only",
+          description:
+            "We place only the weak acid CH₃COOH in water. All solutions are <strong>1 mol dm⁻³</strong>.",
+          cases: [
+            {
+              id: "acid-0.1-100",
+              label: "CH₃COOH 100 cm³",
+              acidConc: 1,
+              acidVolumeCm3: 100,
+            },
+          ],
+        },
+        "acid-base": {
+          label: "NaOH + CH₃COOH",
+          description:
+            "We mix a strong base (NaOH) with a weak acid (CH₃COOH). The reaction goes to completion. All solutions are <strong>1 mol dm⁻³</strong>.",
+          cases: [
+            {
+              id: "ab-1-50-50",
+              label:
+                "50 cm³ NaOH with 50 cm³ CH₃COOH",
+              acidConc: 1,
+              acidVolumeCm3: 50,
+              baseConc: 1,
+              baseVolumeCm3: 50,
+            },
+            {
+              id: "ab-1-30-70",
+              label:
+                "30 cm³ NaOH with 70 cm³ CH₃COOH",
+              acidConc: 1,
+              acidVolumeCm3: 70,
+              baseConc: 1,
+              baseVolumeCm3: 30,
+            },
+          ],
+        },
+        "acid-salt": {
+          label: "CH₃COOH + CH₃COO⁻Na⁺",
+          description:
+            "We mix a weak acid with its conjugate base (from CH₃COO⁻Na⁺). This is a buffer pair. All solutions are <strong>1 mol dm⁻³</strong>.",
+          cases: [
+            {
+              id: "as-1-70-30",
+              label:
+                "70 cm³ CH₃COOH with 30 cm³ CH₃COO⁻Na⁺",
+              acidConc: 1,
+              acidVolumeCm3: 70,
+              saltConc: 1,
+              saltVolumeCm3: 30,
+            },
+            {
+              id: "as-1-50-50",
+              label:
+                "50 cm³ CH₃COOH with 50 cm³ CH₃COO⁻Na⁺",
+              acidConc: 1,
+              acidVolumeCm3: 50,
+              saltConc: 1,
+              saltVolumeCm3: 50,
+            },
+          ],
+        },
+      };
+
+      let currentStep = 1;
+      let selectedReagentSet = null;
+      let selectedCaseId = null;
+      let computedState = null;
+
+      const stepperEl = document.getElementById("stepper");
+      const stepSections = {
+        1: document.getElementById("step-1"),
+        2: document.getElementById("step-2"),
+        3: document.getElementById("step-3"),
+        4: document.getElementById("step-4"),
+        5: document.getElementById("step-5"),
+      };
+      const caseOptionsEl = document.getElementById("case-options");
+      const caseSummaryEl = document.getElementById("case-summary");
+      const step2DescEl = document.getElementById("step-2-description");
+      const reactionTextEl = document.getElementById("reaction-text");
+      const reactionTableContainer = document.getElementById(
+        "reaction-table-container"
+      );
+      const step3Setup = document.getElementById("step3-setup");
+      const step3SetupRow = document.getElementById("step3-setup-row");
+      const reactionBlock = document.getElementById("reaction-block");
+      const classificationBox = document.getElementById("classification-box");
+      const studentDecisionOptions = document.getElementById(
+        "student-decision-options"
+      );
+      const decisionFeedback = document.getElementById("decision-feedback");
+      const calcQuestion = document.getElementById("calc-question");
+      const calcDecisionOptions = document.getElementById(
+        "calc-decision-options"
+      );
+      const calcDecisionFeedback = document.getElementById(
+        "calc-decision-feedback"
+      );
+      const showWorkingBtn = document.getElementById("show-working-btn");
+      const stepLabels = document.querySelectorAll("[data-step-label]");
+      const decisionNodes = document.querySelectorAll(".tree-node.leaf");
+      const openDerivationBtn = document.getElementById("open-derivation");
+      const modalBackdrop = document.getElementById("modal-backdrop");
+      const closeModalBtn = document.getElementById("close-modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalBody = document.getElementById("modal-body");
+      const restartBtn = document.getElementById("restart-btn");
+      const restartBtnRight = document.getElementById("restart-btn-right");
+      const rightRestartContainer = document.getElementById(
+        "right-restart-container"
+      );
+
+      function moles(conc, volumeCm3) {
+        return conc * (volumeCm3 / 1000);
+      }
+
+      function showSection(stepNumber, shown) {
+        const el = stepSections[stepNumber];
+        if (!el) return;
+        el.hidden = !shown;
+        if (shown) {
+          el.classList.add("visible");
+        } else {
+          el.classList.remove("visible");
+        }
+      }
+
+      function updateStepper() {
+        const steps = stepperEl.querySelectorAll(".stepper-step");
+        steps.forEach((el) => {
+          const step = Number(el.dataset.step);
+          el.classList.remove("current", "completed", "disabled");
+          if (step === currentStep) {
+            el.classList.add("current");
+          } else if (step < currentStep) {
+            el.classList.add("completed");
+          } else {
+            el.classList.add("disabled");
+          }
+        });
+      }
+
+      function goToStep(step) {
+        currentStep = step;
+        Object.keys(stepSections).forEach((key) => {
+          const num = Number(key);
+          showSection(num, num === step);
+        });
+        updateStepper();
+        updateTreeHighlights();
+        updateStepLabels();
+      }
+
+      function updateStepLabels() {
+        stepLabels.forEach((label) => {
+          const step = Number(label.dataset.stepLabel);
+          if (step === currentStep) {
+            label.classList.add("active");
+          } else {
+            label.classList.remove("active");
+          }
+        });
+      }
+
+      function selectReagentSet(key) {
+        selectedReagentSet = key;
+        selectedCaseId = null;
+        computedState = null;
+
+        document
+          .querySelectorAll('.card[data-reagent-set]')
+          .forEach((card) => {
+            if (card.dataset.reagentSet === key) {
+              card.classList.add("selected");
+            } else {
+              card.classList.remove("selected");
+            }
+          });
+
+        populateCaseOptions();
+        goToStep(2);
+      }
+
+      function populateCaseOptions() {
+        const scenario = scenarios[selectedReagentSet];
+        if (!scenario) return;
+
+        step2DescEl.innerHTML = scenario.description;
+
+        caseOptionsEl.innerHTML = "";
+        caseSummaryEl.textContent = "";
+        scenario.cases.forEach((c) => {
+          const label = document.createElement("label");
+          const pill = document.createElement("span");
+          pill.className = "case-pill";
+          pill.textContent = c.label;
+          label.dataset.caseId = c.id;
+          label.appendChild(pill);
+          label.addEventListener("click", () => {
+            selectCase(c.id);
+          });
+
+          if (c.id === selectedCaseId) {
+            pill.classList.add("selected");
+          }
+          caseOptionsEl.appendChild(label);
+        });
+      }
+
+      function selectCase(caseId) {
+        selectedCaseId = caseId;
+        computedState = computeState();
+        document.querySelectorAll(".case-pill").forEach((pill) => {
+          const parent = pill.parentElement;
+          if (parent && parent.dataset.caseId === caseId) {
+            pill.classList.add("selected");
+          } else {
+            pill.classList.remove("selected");
+          }
+        });
+        renderCaseSummary();
+        renderStep3Setup();
+        resetStudentDecision();
+        reactionTextEl.textContent = "";
+        reactionTableContainer.innerHTML = "";
+        classificationBox.hidden = true;
+        goToStep(3);
+      }
+
+      function computeState() {
+        if (!selectedReagentSet || !selectedCaseId) return null;
+        const scenario = scenarios[selectedReagentSet];
+        const chosen = scenario.cases.find((c) => c.id === selectedCaseId);
+        if (!chosen) return null;
+
+        const totalVolumeCm3 =
+          (chosen.acidVolumeCm3 || 0) +
+          (chosen.baseVolumeCm3 || 0) +
+          (chosen.saltVolumeCm3 || 0);
+        const totalVolumeL = totalVolumeCm3 / 1000;
+
+        const state = {
+          reagentSet: selectedReagentSet,
+          caseLabel: chosen.label,
+          caseInfo: chosen,
+          totalVolumeL,
+          nAcidInitial: chosen.acidConc
+            ? moles(chosen.acidConc, chosen.acidVolumeCm3)
+            : 0,
+          nBaseInitial: chosen.baseConc
+            ? moles(chosen.baseConc, chosen.baseVolumeCm3)
+            : 0,
+          nSaltInitial: chosen.saltConc
+            ? moles(chosen.saltConc, chosen.saltVolumeCm3)
+            : 0,
+        };
+
+        if (selectedReagentSet === "acid-base") {
+          const nA = state.nAcidInitial;
+          const nB = state.nBaseInitial;
+          const reacted = Math.min(nA, nB);
+          state.nAcidFinal = nA - reacted;
+          state.nBaseFinal = nB - reacted;
+          state.nSaltFinal = reacted;
+        } else if (selectedReagentSet === "acid-salt") {
+          state.nAcidFinal = state.nAcidInitial;
+          state.nBaseFinal = 0;
+          state.nSaltFinal = state.nSaltInitial;
+        } else if (selectedReagentSet === "acid") {
+          state.nAcidFinal = state.nAcidInitial;
+          state.nBaseFinal = 0;
+          state.nSaltFinal = 0;
+        }
+
+        state.classification = classifyMixture(
+          state.nAcidFinal,
+          state.nSaltFinal
+        );
+
+        return state;
+      }
+
+      function classifyMixture(nAcid, nSalt) {
+        const eps = 1e-9;
+        const hasAcid = nAcid > eps;
+        const hasSalt = nSalt > eps;
+        if (hasAcid && !hasSalt) return "weak-acid";
+        if (hasAcid && hasSalt) return "buffer";
+        if (!hasAcid && hasSalt) return "salt-hydrolysis";
+        return "none";
+      }
+
+      function renderCaseSummary() {
+        // We no longer show a textual summary on the right;
+        // the chosen mixture is displayed in the pills under the tree.
+        caseSummaryEl.textContent = "";
+      }
+
+      function renderReactionStep() {
+        if (!computedState) return;
+        const s = computedState;
+        reactionTableContainer.innerHTML = "";
+
+        if (s.reagentSet === "acid-base") {
+          reactionTextEl.textContent =
+            "Since we have a strong base (NaOH) and a weak acid (CH₃COOH), the reaction CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O goes to completion. We can use a simple limiting-excess table.";
+
+          const table = document.createElement("table");
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th></th>
+                <th>CH₃COOH (mol)</th>
+                <th>OH⁻ from NaOH (mol)</th>
+                <th>CH₃COO⁻ formed (mol)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Initial</td>
+                <td>${s.nAcidInitial.toFixed(3)}</td>
+                <td>${s.nBaseInitial.toFixed(3)}</td>
+                <td>0.000</td>
+              </tr>
+              <tr>
+                <td>Change</td>
+                <td>−${Math.min(
+                  s.nAcidInitial,
+                  s.nBaseInitial
+                ).toFixed(3)}</td>
+                <td>−${Math.min(
+                  s.nAcidInitial,
+                  s.nBaseInitial
+                ).toFixed(3)}</td>
+                <td>+${Math.min(
+                  s.nAcidInitial,
+                  s.nBaseInitial
+                ).toFixed(3)}</td>
+              </tr>
+              <tr>
+                <td>Final</td>
+                <td>${s.nAcidFinal.toFixed(3)}</td>
+                <td>${s.nBaseFinal.toFixed(3)}</td>
+                <td>${s.nSaltFinal.toFixed(3)}</td>
+              </tr>
+            </tbody>
+          `;
+          reactionTableContainer.appendChild(table);
+
+          const concAcid =
+            s.totalVolumeL > 0 ? s.nAcidFinal / s.totalVolumeL : 0;
+          const concSalt =
+            s.totalVolumeL > 0 ? s.nSaltFinal / s.totalVolumeL : 0;
+
+          const concTable = document.createElement("table");
+          concTable.style.marginTop = "0.75rem";
+          concTable.innerHTML = `
+            <thead>
+              <tr>
+                <th>Species</th>
+                <th>Final concentration (mol dm⁻³)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CH₃COOH</td>
+                <td>${concAcid.toFixed(3)}</td>
+              </tr>
+              <tr>
+                <td>CH₃COO⁻</td>
+                <td>${concSalt.toFixed(3)}</td>
+              </tr>
+            </tbody>
+          `;
+          reactionTableContainer.appendChild(concTable);
+        } else {
+          if (s.reagentSet === "acid") {
+            reactionTextEl.textContent =
+              "Only the weak acid CH₃COOH is present. There is no reaction with another species before equilibrium; CH₃COOH will partially dissociate in water.";
+          } else if (s.reagentSet === "acid-salt") {
+            reactionTextEl.textContent =
+              "We have CH₃COOH together with its conjugate base CH₃COO⁻ (from CH₃COO⁻Na⁺). No reaction between them occurs before equilibrium; together they form a buffer solution.";
+          }
+
+          const concAcid =
+            s.totalVolumeL > 0 ? s.nAcidFinal / s.totalVolumeL : 0;
+          const concSalt =
+            s.totalVolumeL > 0 ? s.nSaltFinal / s.totalVolumeL : 0;
+          const eps = 1e-9;
+
+          const table = document.createElement("table");
+          const thead = document.createElement("thead");
+          thead.innerHTML = `
+              <tr>
+                <th>Species</th>
+                <th>Amount present (mol)</th>
+                <th>Concentration (mol dm⁻³)</th>
+              </tr>`;
+          table.appendChild(thead);
+
+          const tbody = document.createElement("tbody");
+
+          if (s.nAcidFinal > eps) {
+            const rowAcid = document.createElement("tr");
+            rowAcid.innerHTML = `
+                <td>CH₃COOH</td>
+                <td>${s.nAcidFinal.toFixed(3)}</td>
+                <td>${concAcid.toFixed(3)}</td>`;
+            tbody.appendChild(rowAcid);
+          }
+
+          if (s.nSaltFinal > eps) {
+            const rowSalt = document.createElement("tr");
+            rowSalt.innerHTML = `
+                <td>CH₃COO⁻</td>
+                <td>${s.nSaltFinal.toFixed(3)}</td>
+                <td>${concSalt.toFixed(3)}</td>`;
+            tbody.appendChild(rowSalt);
+          }
+
+          table.appendChild(tbody);
+          reactionTableContainer.appendChild(table);
+        }
+      }
+
+      // renderMixtureSummary removed: mixture-after-reaction is now shown in tables only
+
+      function renderStep3Setup() {
+        if (!computedState || !computedState.caseInfo) return;
+        const c = computedState.caseInfo;
+        step3SetupRow.innerHTML = "";
+        const parts = [];
+        if (c.acidConc && c.acidVolumeCm3) {
+          parts.push(
+            `CH₃COOH: ${c.acidConc.toFixed(1)} mol dm⁻³, ${
+              c.acidVolumeCm3
+            } cm³`
+          );
+        }
+        if (c.baseConc && c.baseVolumeCm3) {
+          parts.push(
+            `NaOH: ${c.baseConc.toFixed(1)} mol dm⁻³, ${
+              c.baseVolumeCm3
+            } cm³`
+          );
+        }
+        if (c.saltConc && c.saltVolumeCm3) {
+          parts.push(
+            `CH₃COO⁻Na⁺: ${c.saltConc.toFixed(1)} mol dm⁻³, ${
+              c.saltVolumeCm3
+            } cm³`
+          );
+        }
+
+        parts.forEach((text) => {
+          const pill = document.createElement("span");
+          pill.className = "mixture-pill";
+          pill.textContent = text;
+          step3SetupRow.appendChild(pill);
+        });
+
+        step3Setup.hidden = parts.length === 0;
+      }
+
+      function renderClassification() {
+        if (!computedState) return;
+        const s = computedState;
+        decisionNodes.forEach((node) => {
+          node.classList.remove("active");
+        });
+        const nodeEl = document.querySelector(
+          '.tree-node.leaf[data-node="' + s.classification + '"]'
+        );
+        if (nodeEl) {
+          nodeEl.classList.add("active");
+        }
+      }
+
+      function updateTreeHighlights() {
+        const rootNode = document.querySelector(".tree-node.root");
+        const decisionNode = document.querySelector(".tree-node.decision");
+        rootNode.classList.remove("highlight");
+        decisionNode.classList.remove("highlight");
+        decisionNodes.forEach((n) => {
+          n.classList.remove("highlight");
+          n.classList.remove("active");
+        });
+
+        if (currentStep >= 1) {
+          rootNode.classList.add("highlight");
+        }
+        if (currentStep >= 2) {
+          decisionNode.classList.add("highlight");
+        }
+        if (currentStep >= 4 && computedState) {
+          const s = computedState;
+          if (classificationBox.hidden) {
+            // User is choosing the calculation – all leaves glow softly
+            decisionNodes.forEach((n) => n.classList.add("highlight"));
+          } else {
+            // Correct calculation chosen – only the matching leaf is filled
+            const nodeEl = document.querySelector(
+              '.tree-node.leaf[data-node="' + s.classification + '"]'
+            );
+            if (nodeEl) {
+              nodeEl.classList.add("active");
+            }
+          }
+        }
+      }
+
+      function resetStudentDecision() {
+        decisionFeedback.textContent = "";
+        classificationBox.hidden = true;
+        const inputs = studentDecisionOptions.querySelectorAll(
+          'input[name="student-decision"]'
+        );
+        inputs.forEach((i) => {
+          i.checked = false;
+          i.disabled = false;
+          const label = i.closest("label");
+          if (label) label.classList.remove("selected");
+        });
+        calcDecisionFeedback.textContent = "";
+        const calcInputs = calcDecisionOptions.querySelectorAll(
+          'input[name="calc-decision"]'
+        );
+        calcInputs.forEach((i) => {
+          i.checked = false;
+          i.disabled = false;
+          const label = i.closest("label");
+          if (label) label.classList.remove("selected");
+        });
+      }
+
+      function handleStudentDecision(value) {
+        if (!computedState) return;
+        const inputs = studentDecisionOptions.querySelectorAll(
+          'input[name="student-decision"]'
+        );
+        inputs.forEach((i) => {
+          const label = i.closest("label");
+          if (!label) return;
+          label.classList.remove("selected", "wrong");
+          if (i.value === value) {
+            label.classList.add("selected");
+          }
+        });
+        const correct = value === computedState.classification;
+        if (correct) {
+          const s = computedState;
+          let msg = "";
+          if (s.reagentSet === "acid") {
+            msg =
+              "Look at the species before dissociation: only CH₃COOH is present in the initial mixture.";
+          } else if (s.reagentSet === "acid-salt") {
+            msg =
+              "CH₃COOH and CH₃COO⁻ (from CH₃COO⁻Na⁺) do not react with each other before equilibrium; they simply coexist in solution.";
+          } else if (s.reagentSet === "acid-base") {
+            msg =
+              "Correct: that matches the chemistry of this mixture. Use the limiting–excess table on the next step to see which reagent is in excess.";
+          } else {
+            msg = "Correct: that matches the chemistry of this mixture.";
+          }
+          decisionFeedback.textContent = msg;
+          calcDecisionFeedback.textContent = "";
+          // Populate the reaction box for the next step
+          renderReactionStep();
+          goToStep(4);
+        } else {
+          decisionFeedback.textContent =
+            "Not quite. Think again about which species react and what is left in solution. Hint: Look at the limiting and excess reagents.";
+          const wrongLabel = Array.from(inputs).find(
+            (i) => i.value === value
+          )?.closest("label");
+          if (wrongLabel) {
+            wrongLabel.classList.add("wrong");
+          }
+        }
+      }
+
+      function handleCalcDecision(value) {
+        if (!computedState) return;
+        const inputs = calcDecisionOptions.querySelectorAll(
+          'input[name="calc-decision"]'
+        );
+        inputs.forEach((i) => {
+          const label = i.closest("label");
+          if (!label) return;
+          label.classList.remove("selected", "wrong");
+          if (i.value === value) {
+            label.classList.add("selected");
+          }
+        });
+        const correct = value === computedState.classification;
+        if (correct) {
+          calcDecisionFeedback.textContent =
+            "Nice choice: this is the correct calculation for this mixture.";
+          renderReactionStep();
+          // Highlight only the matching leaf on the tree
+          decisionNodes.forEach((n) => {
+            n.classList.remove("highlight");
+            n.classList.remove("active");
+          });
+          const nodeEl = document.querySelector(
+            '.tree-node.leaf[data-node="' + computedState.classification + '"]'
+          );
+          if (nodeEl) {
+            nodeEl.classList.add("active");
+          }
+          rightRestartContainer.hidden = false;
+        } else {
+          calcDecisionFeedback.textContent =
+            "That calculation does not match what is left in solution. Use the tree on the left as a hint.";
+          const wrongInput = Array.from(inputs).find(
+            (i) => i.value === value
+          );
+          const wrongLabel = wrongInput ? wrongInput.closest("label") : null;
+          if (wrongLabel) {
+            wrongLabel.classList.remove("selected");
+            wrongLabel.classList.add("wrong");
+          }
+        }
+      }
+
+      document
+        .querySelectorAll('.card[data-reagent-set]')
+        .forEach((card) => {
+          card.addEventListener("click", () => {
+            selectReagentSet(card.dataset.reagentSet);
+          });
+        });
+
+      studentDecisionOptions.addEventListener("change", (e) => {
+        const target = e.target;
+        if (target && target.name === "student-decision") {
+          handleStudentDecision(target.value);
+        }
+      });
+
+      calcDecisionOptions.addEventListener("change", (e) => {
+        const target = e.target;
+        if (target && target.name === "calc-decision") {
+          handleCalcDecision(target.value);
+        }
+      });
+
+      function formatNumber(value, digits = 3) {
+        if (!isFinite(value)) return "";
+        return Number(value).toFixed(digits);
+      }
+
+      function getModalContentForClassification(kind, state) {
+        if (kind === "weak-acid" && state) {
+          const c0 =
+            state.totalVolumeL > 0
+              ? state.nAcidFinal / state.totalVolumeL
+              : null;
+          const c0Text =
+            c0 != null ? formatNumber(c0, 3) + " mol dm⁻³" : "C₀ mol dm⁻³";
+          const hApprox =
+            c0 != null ? Math.sqrt(Ka * c0) : Math.sqrt(Ka || 1e-5);
+          const pHApprox =
+            hApprox > 0 ? -Math.log10(hApprox) : null;
+          return {
+            title: "Weak acid dissociation (CH₃COOH)",
+            body: `
+              <p>This walkthrough shows the classic weak acid dissociation steps for CH₃COOH.</p>
+              <p>Start from the initial concentration of CH₃COOH in this setup. From the mixture you chose, the initial concentration is</p>
+              <p style="margin-left:1.2rem;"><strong>[CH₃COOH]₀ = ${c0Text}</strong>.</p>
+              <p>Build the ICE table in concentration units (mol dm⁻³):</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>CH<sub>3</sub>COOH</th>
+                    <th>CH<sub>3</sub>COO<sup>-</sup></th>
+                    <th>H<sup>+</sup></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight:600;">Initial</td>
+                    <td>C₀</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Change</td>
+                    <td>-x</td>
+                    <td>+x</td>
+                    <td>+x</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Equilibrium</td>
+                    <td>C₀ - x</td>
+                    <td>x</td>
+                    <td>x</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ol>
+                <li>Write the equilibrium: CH<sub>3</sub>COOH ⇌ CH<sub>3</sub>COO<sup>-</sup> + H<sup>+</sup>.</li>
+                <li>Use the ICE table above, where the dissociation of CH<sub>3</sub>COOH is <em>x</em>.</li>
+                <li>Write the K<sub>a</sub> expression:
+                  K<sub>a</sub> = [H<sup>+</sup>][CH<sub>3</sub>COO<sup>-</sup>] / [CH<sub>3</sub>COOH].</li>
+                <li>Substitute the ICE values and assume that <em>x</em> is small compared to C₀:
+                  K<sub>a</sub> ≈ x² / C₀.</li>
+                <li>Solve for [H<sup>+</sup>] ≈ √(K<sub>a</sub>C₀).
+                  For this mixture, [H<sup>+</sup>] ≈ <strong>${formatNumber(
+                    hApprox,
+                    3
+                  )} mol dm⁻³</strong>.</li>
+                <li>Finally, convert [H<sup>+</sup>] to pH:
+                  pH = −log₁₀[H<sup>+</sup>] ≈ <strong>${pHApprox
+                    ? formatNumber(pHApprox, 2)
+                    : ""}</strong>, and check that the small‑<em>x</em> assumption is reasonable.</li>
+              </ol>
+            `,
+          };
+        }
+        if (kind === "buffer" && state) {
+          const cAcid =
+            state.totalVolumeL > 0
+              ? state.nAcidFinal / state.totalVolumeL
+              : null;
+          const cSalt =
+            state.totalVolumeL > 0
+              ? state.nSaltFinal / state.totalVolumeL
+              : null;
+          const ratio = cAcid && cSalt ? cSalt / cAcid : null;
+          const pKa = -Math.log10(Ka);
+          const pH = ratio ? pKa + Math.log10(ratio) : null;
+          const isEqualBuffer =
+            cAcid && cSalt
+              ? Math.abs(cAcid - cSalt) / Math.max(cAcid, cSalt) < 1e-6
+              : false;
+          return {
+            title: "Buffer calculation (CH₃COOH / CH₃COO⁻)",
+            body: `
+              <p>This walkthrough uses the Henderson–Hasselbalch equation for a CH₃COOH / CH₃COO⁻ buffer.</p>
+              <ol>
+                <li>Confirm that both CH<sub>3</sub>COOH and CH<sub>3</sub>COO⁻ are present in significant amounts.</li>
+                <li>Write the Henderson–Hasselbalch equation:
+                  pH = pK<sub>a</sub> + log([CH<sub>3</sub>COO<sup>-</sup>] / [CH<sub>3</sub>COOH]).</li>
+                <li>Compute the concentrations from the mixed volumes:
+                  [CH<sub>3</sub>COOH] = n<sub>acid</sub> / V and
+                  [CH<sub>3</sub>COO⁻] = n<sub>base</sub> / V.</li>
+                <li>For this mixture,
+                  [CH<sub>3</sub>COOH] ≈ <strong>${cAcid
+                    ? formatNumber(cAcid, 3)
+                    : "..."}</strong> mol dm⁻³ and
+                  [CH<sub>3</sub>COO⁻] ≈ <strong>${cSalt
+                    ? formatNumber(cSalt, 3)
+                    : "..."}</strong> mol dm⁻³.</li>
+                <li>Evaluate the log term:
+                  log([base]/[acid]) = log(${cSalt
+                    ? formatNumber(cSalt, 3)
+                    : "…"} / ${cAcid
+                    ? formatNumber(cAcid, 3)
+                    : "…"})${ratio ? " ≈ " + formatNumber(Math.log10(ratio), 3) : ""
+                    }.</li>
+                <li>With pK<sub>a</sub>(CH<sub>3</sub>COOH) ≈ <strong>${formatNumber(
+                  pKa,
+                  2
+                )}</strong>, the pH is
+                  pH ≈ pK<sub>a</sub> + log([base]/[acid]) ≈ <strong>${pH
+                    ? formatNumber(pH, 2)
+                    : ""}</strong>.</li>
+                ${
+                  isEqualBuffer
+                    ? `<li>In this example, [acid] ≈ [base], so the log term is approximately zero and
+                  pH ≈ pK<sub>a</sub>. This corresponds to the point of <strong>maximum buffering capacity</strong>.</li>`
+                    : ""
+                }
+              </ol>
+            `,
+          };
+        }
+        if (kind === "salt-hydrolysis" && state) {
+          const cSalt =
+            state.totalVolumeL > 0
+              ? state.nSaltFinal / state.totalVolumeL
+              : null;
+          const Kb = 1e-14 / Ka;
+          const ohApprox =
+            cSalt != null ? Math.sqrt(Kb * cSalt) : Math.sqrt(Kb || 1e-9);
+          const pOH = ohApprox > 0 ? -Math.log10(ohApprox) : null;
+          const pH = pOH != null ? 14 - pOH : null;
+          return {
+            title: "Salt hydrolysis (CH₃COO⁻)",
+            body: `
+              <p>This walkthrough shows how to treat CH₃COO⁻ as a weak base via salt hydrolysis.</p>
+              <p>From the mixture you chose, the initial concentration of the conjugate base is</p>
+              <p style="margin-left:1.2rem;"><strong>[CH₃COO⁻]₀ = ${cSalt
+                ? formatNumber(cSalt, 3)
+                : "n/V"} mol dm⁻³</strong>.</p>
+              <p>Set up the ICE table in concentration units (mol dm⁻³) for the hydrolysis equilibrium:</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>CH<sub>3</sub>COO<sup>-</sup></th>
+                    <th>CH<sub>3</sub>COOH</th>
+                    <th>OH<sup>-</sup></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight:600;">Initial</td>
+                    <td>[CH<sub>3</sub>COO<sup>-</sup>]<sub>0</sub></td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Change</td>
+                    <td>-x</td>
+                    <td>+x</td>
+                    <td>+x</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:600;">Equilibrium</td>
+                    <td>[CH<sub>3</sub>COO<sup>-</sup>]<sub>0</sub> - x</td>
+                    <td>x</td>
+                    <td>x</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ol>
+                <li>Start by finding the new concentration of CH<sub>3</sub>COO⁻ after mixing:
+                  [CH<sub>3</sub>COO⁻]₀ = n<sub>salt</sub> / V ≈ <strong>${cSalt
+                    ? formatNumber(cSalt, 3)
+                    : "..."}</strong> mol dm⁻³.</li>
+                <li>Find K<sub>b</sub> for CH<sub>3</sub>COO⁻ using
+                  K<sub>b</sub> = K<sub>w</sub> / K<sub>a</sub>(CH<sub>3</sub>COOH) ≈ 1.0×10<sup>-14</sup> / 1.8×10<sup>-5</sup>.</li>
+                <li>Write the hydrolysis equilibrium:
+                  CH<sub>3</sub>COO<sup>-</sup> + H<sub>2</sub>O ⇌ CH<sub>3</sub>COOH + OH<sup>-</sup>.</li>
+                <li>Set up the ICE table using the initial [CH<sub>3</sub>COO⁻] and let the hydrolysis be <em>x</em>.</li>
+                <li>Write the K<sub>b</sub> expression from the ICE table and, if appropriate, make the usual “small‑<em>x</em>” approximation so that
+                  K<sub>b</sub> ≈ x² / [CH<sub>3</sub>COO⁻]₀.</li>
+                <li>Solve for [OH<sup>-</sup>] ≈ √(K<sub>b</sub>[CH<sub>3</sub>COO⁻]₀).
+                  For this mixture, [OH<sup>-</sup>] ≈ <strong>${formatNumber(
+                    ohApprox,
+                    3
+                  )} mol dm⁻³</strong>.</li>
+                <li>Convert to pH via pOH: pOH = −log₁₀[OH<sup>-</sup>] ≈ <strong>${pOH
+                  ? formatNumber(pOH, 2)
+                  : ""}</strong>, and
+                  pH = 14 − pOH ≈ <strong>${pH ? formatNumber(pH, 2) : ""}</strong>.</li>
+              </ol>
+            `,
+          };
+        }
+        return {
+          title: "Derivation",
+          body:
+            "<p>Select a mixture and work through the steps to see a tailored derivation for weak acid dissociation, buffer behaviour, or salt hydrolysis.</p>",
+        };
+      }
+
+      showWorkingBtn.addEventListener("click", () => {
+        const kind = computedState ? computedState.classification : null;
+        const { title, body } = getModalContentForClassification(
+          kind,
+          computedState
+        );
+        modalTitle.textContent = title;
+        modalBody.innerHTML = body;
+        modalBackdrop.classList.add("show");
+      });
+
+      stepperEl.querySelectorAll(".stepper-step").forEach((stepEl) => {
+        stepEl.addEventListener("click", () => {
+          const step = Number(stepEl.dataset.step);
+          if (step >= currentStep) return;
+          goToStep(step);
+        });
+      });
+
+      openDerivationBtn.addEventListener("click", () => {
+        const kind = computedState ? computedState.classification : null;
+        const { title, body } = getModalContentForClassification(
+          kind,
+          computedState
+        );
+        modalTitle.textContent = title;
+        modalBody.innerHTML = body;
+        modalBackdrop.classList.add("show");
+      });
+
+      closeModalBtn.addEventListener("click", () => {
+        modalBackdrop.classList.remove("show");
+      });
+
+      modalBackdrop.addEventListener("click", (e) => {
+        if (e.target === modalBackdrop) {
+          modalBackdrop.classList.remove("show");
+        }
+      });
+
+      function performRestart() {
+        selectedReagentSet = null;
+        selectedCaseId = null;
+        computedState = null;
+
+        document
+          .querySelectorAll('.card[data-reagent-set]')
+          .forEach((card) => {
+            card.classList.remove("selected");
+          });
+
+        caseOptionsEl.innerHTML = "";
+        caseSummaryEl.textContent = "";
+        reactionTextEl.textContent = "";
+        reactionTableContainer.innerHTML = "";
+        classificationBox.innerHTML = "";
+        decisionNodes.forEach((node) => node.classList.remove("active"));
+        modalBackdrop.classList.remove("show");
+
+        step3SetupRow.innerHTML = "";
+        step3Setup.hidden = true;
+        rightRestartContainer.hidden = true;
+        goToStep(1);
+      }
+
+      restartBtn.addEventListener("click", () => {
+        performRestart();
+      });
+
+      restartBtnRight.addEventListener("click", () => {
+        performRestart();
+      });
+
+      goToStep(1);
+    </script>
+  </body>
+  </html>
