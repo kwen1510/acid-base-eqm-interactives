@@ -16,6 +16,7 @@
       color: #333;
     }
 
+    /* Header Banner */
     .banner {
       background: linear-gradient(135deg, #336dff, #67a7ff);
       padding: 60px 20px;
@@ -39,6 +40,7 @@
       opacity: 0.92;
     }
 
+    /* Container Grid */
     .container {
       max-width: 1100px;
       margin: 50px auto;
@@ -48,6 +50,7 @@
       gap: 32px;
     }
 
+    /* Card Styling */
     .card {
       backdrop-filter: blur(12px);
       background: rgba(255, 255, 255, 0.7);
@@ -56,7 +59,10 @@
       text-decoration: none;
       color: inherit;
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
       display: block;
       animation: floatUp 0.8s ease both;
     }
@@ -91,35 +97,47 @@
 
 <body>
 
+  <!-- Header -->
   <div class="banner">
     <h1>Acid–Base Equilibria Interactives</h1>
-    <p>Explore acid-base equilibria algorithms</p>
+    <p>Explore algorithms, buffer concepts, and equilibrium models through interactive tools.</p>
   </div>
 
-  <div class="container">
+  <!-- Dynamic Container -->
+  <div class="container" id="cards-container"></div>
 
-    <a class="card" href="algorithms-weak-acid.html" target="_blank" rel="noopener noreferrer">
-      <div class="card-title">Weak Acid Algorithms</div>
-      <div class="card-desc">
-        ICE tables, Ka expressions, small-x approximations, and pH calculations.
-      </div>
-    </a>
+  <!-- JSON Loader Script -->
+  <script>
+    async function loadCards() {
+      try {
+        const response = await fetch('cards.json');
+        const cards = await response.json();
 
-    <a class="card" href="algorithms-weak-base.html" target="_blank" rel="noopener noreferrer">
-      <div class="card-title">Weak Base Algorithms</div>
-      <div class="card-desc">
-        Kb expressions, conjugate acid relations, pOH → pH conversions.
-      </div>
-    </a>
+        const container = document.getElementById('cards-container');
+        container.innerHTML = ""; // clear existing cards
 
-    <a class="card" href="buffer-action.html" target="_blank" rel="noopener noreferrer">
-      <div class="card-title">Buffer Action</div>
-      <div class="card-desc">
-        Visualise buffer systems and how they resist changes in pH.
-      </div>
-    </a>
+        cards.forEach(card => {
+          const el = document.createElement('a');
+          el.className = 'card';
+          el.href = card.href;
+          el.target = "_blank";
+          el.rel = "noopener noreferrer";
 
-  </div>
+          el.innerHTML = `
+            <div class="card-title">${card.title}</div>
+            <div class="card-desc">${card.description}</div>
+          `;
+
+          container.appendChild(el);
+        });
+
+      } catch (err) {
+        console.error("Failed to load cards.json", err);
+      }
+    }
+
+    loadCards();
+  </script>
 
 </body>
 </html>
