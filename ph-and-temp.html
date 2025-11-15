@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>pH of Pure Water vs Temperature</title>
+    <style>
+      :root {
+        --accent: #0f766e;
+        --accent-soft: #ecfdf5;
+        --accent-strong: #0d9488;
+        --accent-orange: #f97316;
+        --accent-orange-dark: #ea580c;
+        --border-subtle: #e5e7eb;
+        --bg-page: #f3f4f6;
+        --bg-card: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: var(--bg-page);
+        color: var(--text-main);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin-top: 0;
+      }
+
+      .app {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        padding: 1.5rem 2rem 2rem;
+        border-radius: 14px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+      }
+
+      .layout {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .layout-left {
+        flex: 0 0 280px;
+        border-right: 1px solid var(--border-subtle);
+        padding-right: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .layout-right {
+        flex: 1 1 auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section {
+        margin-top: 0.25rem;
+      }
+
+      .section h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .small-muted {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .control-card {
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        padding: 0.75rem 0.9rem;
+        background: #f9fafb;
+        margin-top: 0.5rem;
+      }
+
+      .control-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .control-label-main {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .control-label-caption {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .control-value {
+        font-size: 0.85rem;
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .slider-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 0.35rem;
+      }
+
+      input[type="range"] {
+        flex: 1 1 auto;
+      }
+
+      .step-btn {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: #fff;
+        color: var(--accent-strong);
+        cursor: pointer;
+        transition: background 120ms ease, border-color 120ms ease,
+          box-shadow 120ms ease, transform 100ms ease;
+      }
+
+      .step-btn:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 3px 6px rgba(15, 23, 42, 0.18);
+        transform: translateY(-0.5px);
+      }
+
+      button {
+        padding: 0.45rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+      }
+
+      button.secondary {
+        background: #fff;
+        color: var(--accent);
+      }
+
+      button:hover:not([disabled]) {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+        transform: translateY(-1px);
+      }
+
+      button.secondary:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+      }
+
+      button[disabled] {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .ph-display {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        padding: 0.75rem 0.9rem;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .ph-number {
+        font-size: 2.1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--accent-strong);
+        min-width: 4.3rem;
+        text-align: center;
+      }
+
+      .ph-context {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .note {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.45rem;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+      }
+
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 0.35rem 0.5rem;
+        text-align: center;
+      }
+
+      th {
+        background: #f9fafb;
+        font-weight: 600;
+      }
+
+      .ph-scale {
+        margin-top: 0.75rem;
+      }
+
+      .ph-scale-label-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        margin-top: 0.5rem;
+        color: var(--text-muted);
+      }
+
+      .ph-scale-track {
+        position: relative;
+        height: 10px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        margin-top: 0.25rem;
+        overflow: hidden;
+      }
+
+      .ph-scale-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, #0ea5e9, #22c55e, #f97316);
+        opacity: 0.9;
+      }
+
+      .ph-scale-marker {
+        position: absolute;
+        top: 50%;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #111827;
+        border: 2px solid #ffffff;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.2);
+        transition: left 160ms ease-out;
+      }
+
+      .ph-scale-numbers {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 1rem;
+        }
+
+        .app {
+          padding: 1rem 1.1rem 1.25rem;
+        }
+
+        .layout {
+          flex-direction: column;
+        }
+
+        .layout-left {
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-right: 0;
+          padding-bottom: 1rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .layout-right {
+          max-height: none;
+          padding-right: 0;
+        }
+
+        .ph-display {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.4rem;
+        }
+
+        body {
+          padding: 0.75rem;
+        }
+
+        .app {
+          padding: 0.85rem 0.85rem 1rem;
+          border-radius: 10px;
+        }
+
+        table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>pH of Pure Water vs Temperature</h1>
+      <p class="small-muted">
+        Explore how the ionic product of water (K<sub>w</sub>) changes with
+        temperature, and how that shifts pH and pOH even though pure water
+        stays neutral.
+      </p>
+
+      <div class="layout">
+        <!-- LEFT: controls -->
+        <div class="layout-left">
+          <div class="section">
+            <h2>1. Set the temperature</h2>
+            <p class="small-muted">
+              Use the slider to choose a temperature between 0&nbsp;&deg;C and
+              100&nbsp;&deg;C. This model uses tabulated values of
+              K<sub>w</sub> for pure water and interpolates between them.
+            </p>
+
+            <div class="control-card">
+              <div class="control-header">
+                <div>
+                  <div class="control-label-main">Temperature</div>
+                  <div class="control-label-caption">
+                    Pure liquid water, 1.0&nbsp;atm.
+                  </div>
+                </div>
+                <div class="control-value">
+                  <span id="temp-display">25</span>&nbsp;&deg;C
+                </div>
+              </div>
+              <div class="slider-row">
+                <input
+                  type="range"
+                  id="temp-slider"
+                  min="0"
+                  max="100"
+                  step="1"
+                />
+                <button type="button" class="step-btn" id="reset-temp-btn">
+                  Reset to 25&nbsp;&deg;C
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>2. What stays neutral?</h2>
+            <p class="small-muted">
+              This simulation assumes pure water only. At every temperature,
+              [H<sup>+</sup>] and [OH<sup>&minus;</sup>] remain equal, so the
+              solution is neutral even when pH is not exactly 7.00.
+            </p>
+            <p class="note">
+              Watch how the numbers respond instantly as you move the
+              temperature slider.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT: visualisation -->
+        <div class="layout-right">
+          <div class="section">
+            <h2>3. pH, pOH and pK<sub>w</sub></h2>
+            <div class="ph-display">
+              <div class="ph-number" id="ph-number">7.00</div>
+              <div class="ph-context">
+                <div id="neutral-note">
+                  At 25&nbsp;&deg;C, pure water has pH 7.00 and pOH 7.00
+                  (neutral).
+                </div>
+                <div style="margin-top: 0.3rem; font-size: 0.8rem">
+                  pOH = <span id="poh-number">7.00</span>, pK<sub>w</sub> =
+                  <span id="pkw-number">14.00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ph-scale">
+              <div class="ph-scale-label-row">
+                <span class="small-muted">More acidic pH</span>
+                <span class="small-muted">pH scale (0 &rarr; 14)</span>
+                <span class="small-muted">More basic pH</span>
+              </div>
+              <div class="ph-scale-track">
+                <div class="ph-scale-gradient"></div>
+                <div class="ph-scale-marker" id="ph-marker"></div>
+              </div>
+              <div class="ph-scale-numbers">
+                <span>0</span>
+                <span>7</span>
+                <span>14</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>4. K<sub>w</sub> and ion concentrations</h2>
+            <p class="small-muted">
+              [H<sup>+</sup>] and [OH<sup>&minus;</sup>] are equal in pure
+              water and are given by [H<sup>+</sup>] = [OH<sup>&minus;</sup>] =
+              &radic;K<sub>w</sub>.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Temperature / &deg;C</th>
+                  <th>K<sub>w</sub> / (mol<sup>2</sup> dm<sup>&minus;6</sup>)</th>
+                  <th>[H<sup>+</sup>] / mol&nbsp;dm<sup>&minus;3</sup></th>
+                  <th>[OH<sup>&minus;</sup>] / mol&nbsp;dm<sup>&minus;3</sup></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span id="temp-table">25</span></td>
+                  <td><span id="kw-value">1.0 &times; 10<sup>&minus;14</sup></span></td>
+                  <td><span id="h-value">1.0 &times; 10<sup>&minus;7</sup></span></td>
+                  <td><span id="oh-value">1.0 &times; 10<sup>&minus;7</sup></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section">
+            <h2>5. Big idea</h2>
+            <p class="small-muted">
+              As temperature increases, K<sub>w</sub> becomes larger. Both
+              [H<sup>+</sup>] and [OH<sup>&minus;</sup>] increase together, so
+              pH drops below 7.00 but the solution remains neutral because
+              [H<sup>+</sup>] = [OH<sup>&minus;</sup>].
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const kwData = [
+          { temp: 0, kw: 1.14e-15 },
+          { temp: 10, kw: 2.93e-15 },
+          { temp: 20, kw: 6.81e-15 },
+          { temp: 25, kw: 1.0e-14 },
+          { temp: 30, kw: 1.47e-14 },
+          { temp: 40, kw: 2.92e-14 },
+          { temp: 50, kw: 5.47e-14 },
+          { temp: 60, kw: 9.55e-14 },
+          { temp: 80, kw: 3.49e-13 },
+          { temp: 100, kw: 9.61e-13 },
+        ];
+
+        const tempSlider = document.getElementById("temp-slider");
+        const tempDisplay = document.getElementById("temp-display");
+        const tempTable = document.getElementById("temp-table");
+        const kwDisplay = document.getElementById("kw-value");
+        const hDisplay = document.getElementById("h-value");
+        const ohDisplay = document.getElementById("oh-value");
+        const phNumber = document.getElementById("ph-number");
+        const pohNumber = document.getElementById("poh-number");
+        const pkwNumber = document.getElementById("pkw-number");
+        const neutralNote = document.getElementById("neutral-note");
+        const phMarker = document.getElementById("ph-marker");
+        const resetBtn = document.getElementById("reset-temp-btn");
+
+        const log10 =
+          Math.log10 ||
+          function (x) {
+            return Math.log(x) / Math.LN10;
+          };
+
+        function getKwAt(temp) {
+          if (temp <= kwData[0].temp) return kwData[0].kw;
+          if (temp >= kwData[kwData.length - 1].temp)
+            return kwData[kwData.length - 1].kw;
+
+          for (let i = 0; i < kwData.length - 1; i++) {
+            const a = kwData[i];
+            const b = kwData[i + 1];
+            if (temp >= a.temp && temp <= b.temp) {
+              const fraction = (temp - a.temp) / (b.temp - a.temp);
+              const logKwA = log10(a.kw);
+              const logKwB = log10(b.kw);
+              const logKw = logKwA + fraction * (logKwB - logKwA);
+              return Math.pow(10, logKw);
+            }
+          }
+
+          return kwData[kwData.length - 1].kw;
+        }
+
+        function formatSci(value) {
+          if (!isFinite(value) || value === 0) return "0";
+          const exponent = Math.floor(log10(value));
+          const mantissa = value / Math.pow(10, exponent);
+          const mantissaStr = mantissa.toFixed(2).replace(/\.?0+$/, "");
+          return (
+            mantissaStr + " &times; 10<sup>" + exponent.toString() + "</sup>"
+          );
+        }
+
+        function update() {
+          const tempC = parseInt(tempSlider.value, 10);
+          const kw = getKwAt(tempC);
+          const h = Math.sqrt(kw);
+          const oh = h;
+          const pKw = -log10(kw);
+          const pH = -log10(h);
+          const pOH = -log10(oh);
+
+          tempDisplay.textContent = tempC.toString();
+          tempTable.textContent = tempC.toString();
+
+          kwDisplay.innerHTML =
+            formatSci(kw) + " mol\u00b2 dm\u207b\u2076"; // mol^2 dm^-6
+          hDisplay.innerHTML =
+            formatSci(h) + " mol dm\u207b\u00b3"; // mol dm^-3
+          ohDisplay.innerHTML =
+            formatSci(oh) + " mol dm\u207b\u00b3"; // mol dm^-3
+
+          phNumber.textContent = pH.toFixed(2);
+          pohNumber.textContent = pOH.toFixed(2);
+          pkwNumber.textContent = pKw.toFixed(2);
+
+          const neutralText =
+            "At " +
+            tempC +
+            " \u00b0C, pure water has pH " +
+            pH.toFixed(2) +
+            " and pOH " +
+            pOH.toFixed(2) +
+            ". Because [H\u207a] = [OH\u207b], the solution is still neutral.";
+          neutralNote.textContent = neutralText;
+
+          const clampedPh = Math.max(0, Math.min(14, pH));
+          const positionPercent = (clampedPh / 14) * 100;
+          phMarker.style.left = positionPercent + "%";
+        }
+
+        tempSlider.addEventListener("input", update);
+
+        if (resetBtn) {
+          resetBtn.addEventListener("click", function () {
+            tempSlider.value = "25";
+            update();
+          });
+        }
+
+        tempSlider.value = "25";
+        update();
+      })();
+    </script>
+  </body>
+</html>
+
