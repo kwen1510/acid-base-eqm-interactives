@@ -13,5 +13,10 @@
     "title": "Buffer Action",
     "description": "Visualise buffer systems and how they resist changes in pH.",
     "href": "buffer-action.html"
+  },
+  {
+    "title": "pH and Temperature",
+    "description": "Explore how pH changes with temperature",
+    "href": "ph-and-temp.html"
   }
 ]
