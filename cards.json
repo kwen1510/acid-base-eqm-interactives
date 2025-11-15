@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Weak Acid Algorithms",
+    "description": "ICE tables, Ka expressions, small-x approximations, and pH calculations.",
+    "href": "algorithms-weak-acid.html"
+  },
+  {
+    "title": "Weak Base Algorithms",
+    "description": "Kb expressions, conjugate acid relations, pOH → pH conversions.",
+    "href": "algorithms-weak-base.html"
+  },
+  {
+    "title": "Buffer Action",
+    "description": "Visualise buffer systems and how they resist changes in pH.",
+    "href": "buffer-action.html"
+  }
+]
