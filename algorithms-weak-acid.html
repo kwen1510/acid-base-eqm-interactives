@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Acid-Base Algorithm – Choice of Calculation</title>
     <style>
       :root {
@@ -570,6 +571,71 @@
 
       #restart-btn:hover {
         background: var(--accent-orange-dark);
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 1rem;
+        }
+
+        .app {
+          padding: 1rem 1.15rem 1.25rem;
+        }
+
+        .layout {
+          flex-direction: column;
+        }
+
+        .layout-left {
+          flex: 0 0 auto;
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-right: 0;
+          padding-bottom: 1rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .layout-right {
+          max-height: none;
+          padding-right: 0;
+        }
+
+        .stepper {
+          flex-wrap: wrap;
+          row-gap: 0.75rem;
+        }
+
+        .decision-tree {
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.4rem;
+        }
+
+        body {
+          padding: 0.75rem;
+        }
+
+        .app {
+          padding: 0.85rem 0.85rem 1rem;
+          border-radius: 10px;
+        }
+
+        table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          white-space: nowrap;
+        }
+
+        th,
+        td {
+          font-size: 0.8rem;
+          padding: 0.3rem 0.4rem;
+        }
       }
     </style>
   </head>
