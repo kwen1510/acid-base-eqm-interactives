@@ -18,5 +18,10 @@
     "title": "pH and Temperature",
     "description": "Explore how pH changes with temperature",
     "href": "ph-and-temp.html"
+  },
+  {
+    "title": "Dissociation step-by-step",
+    "description": "Understand the steps behind weak acid and base dissociation, building on top of our equilibrium concepts",
+    "href": "dissociation.html"
   }
 ]
