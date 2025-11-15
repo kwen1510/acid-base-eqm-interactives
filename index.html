@@ -11,80 +11,85 @@
     body {
       margin: 0;
       font-family: "Inter", sans-serif;
-      background: linear-gradient(135deg, #eef6ff, #f5fbff);
+      background: linear-gradient(135deg, #e9f2ff, #f7fbff);
       min-height: 100vh;
       color: #333;
     }
 
     /* Header Banner */
     .banner {
-      background: linear-gradient(135deg, #3b7bff, #5fa8ff);
-      padding: 50px 20px;
+      background: linear-gradient(135deg, #336dff, #67a7ff);
+      padding: 60px 20px;
       text-align: center;
       color: white;
-      border-bottom-left-radius: 30px;
-      border-bottom-right-radius: 30px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
     }
 
     .banner h1 {
       margin: 0;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       font-weight: 600;
+      letter-spacing: -0.5px;
     }
 
     .banner p {
-      margin-top: 10px;
-      font-size: 1.05rem;
-      opacity: 0.9;
+      margin-top: 12px;
+      font-size: 1.1rem;
+      opacity: 0.92;
     }
 
     /* Container Grid */
     .container {
       max-width: 1100px;
-      margin: 40px auto;
+      margin: 50px auto;
       padding: 0 20px;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
+      gap: 32px;
     }
 
     /* Card Styling */
     .card {
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       background: rgba(255, 255, 255, 0.7);
-      border-radius: 18px;
-      padding: 26px;
+      border-radius: 20px;
+      padding: 28px;
       text-decoration: none;
       color: inherit;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      transition: 
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
       display: block;
+      animation: floatUp 0.8s ease both;
     }
 
     .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 26px rgba(0,0,0,0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.12);
       background: rgba(255, 255, 255, 0.85);
     }
 
-    .icon {
-      width: 46px;
-      height: 46px;
-      margin-bottom: 12px;
-      opacity: 0.85;
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .card-title {
-      font-size: 1.25rem;
+      font-size: 1.28rem;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       color: #2b64ff;
+      letter-spacing: -0.3px;
     }
 
     .card-desc {
-      font-size: 0.95rem;
-      color: #555;
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.48;
     }
   </style>
 
@@ -101,32 +106,28 @@
   <!-- Cards -->
   <div class="container">
 
-    <!-- 2. Weak Acid Algorithms -->
+    <!-- Weak Acid Algorithms -->
     <a class="card" href="algorithms-weak-acid.html">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path fill="#2b64ff" d="M12 2L4 22h16L12 2zm0 4.8l4.5 12.2h-9L12 6.8z"/>
-      </svg>
       <div class="card-title">Weak Acid Algorithms</div>
-      <div class="card-desc">ICE tables, Ka expressions, approximations and pH calculations.</div>
+      <div class="card-desc">
+        ICE tables, Ka expressions, small-x approximations, and pH calculations.
+      </div>
     </a>
 
-    <!-- 3. Weak Base Algorithms -->
+    <!-- Weak Base Algorithms -->
     <a class="card" href="algorithms-weak-base.html">
-      <svg class="icon" viewBox="0 0 24 24">
-        <circle cx="12" cy="7" r="5" fill="#2b64ff"/>
-        <path fill="#2b64ff" d="M4 22c0-4 3-7 8-7s8 3 8 7H4z"/>
-      </svg>
       <div class="card-title">Weak Base Algorithms</div>
-      <div class="card-desc">Kb calculations, conjugate acid relationships, and pOH/pH methods.</div>
+      <div class="card-desc">
+        Kb expressions, conjugate acid relations, pOH → pH conversions.
+      </div>
     </a>
 
-    <!-- 4. Buffer Action -->
+    <!-- Buffer Action -->
     <a class="card" href="buffer-action.html">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path fill="#2b64ff" d="M5 3h14v4H5V3zm0 6h14v4H5V9zm0 6h14v4H5v-4z"/>
-      </svg>
       <div class="card-title">Buffer Action</div>
-      <div class="card-desc">Understand how buffers resist pH change through interactive scenarios.</div>
+      <div class="card-desc">
+        Visualise buffer systems and how they resist changes in pH.
+      </div>
     </a>
 
   </div>
