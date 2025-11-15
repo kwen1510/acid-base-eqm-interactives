@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weak Acid / Base Dissociation – ICE Table Walkthrough</title>
+    <style>
+      :root {
+        --accent: #0f766e;
+        --accent-soft: #ecfdf5;
+        --accent-strong: #0d9488;
+        --accent-orange: #f97316;
+        --accent-orange-dark: #ea580c;
+        --border-subtle: #e5e7eb;
+        --bg-page: #f3f4f6;
+        --bg-card: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: var(--bg-page);
+        color: var(--text-main);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin-top: 0;
+      }
+
+      .app {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        padding: 1.5rem 2rem 2rem;
+        border-radius: 14px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+      }
+
+      .layout {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .layout-left {
+        flex: 0 0 280px;
+        border-right: 1px solid var(--border-subtle);
+        padding-right: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .layout-right {
+        flex: 1 1 auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+
+      .small-muted {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .section {
+        margin-top: 0.25rem;
+      }
+
+      .section h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .mode-toggle {
+        display: inline-flex;
+        padding: 0.15rem;
+        border-radius: 999px;
+        background: #f3f4f6;
+        border: 1px solid var(--border-subtle);
+        gap: 0.2rem;
+      }
+
+      .mode-btn {
+        border-radius: 999px;
+        border: none;
+        padding: 0.3rem 0.85rem;
+        font-size: 0.85rem;
+        background: transparent;
+        cursor: pointer;
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: background 150ms ease, color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+      }
+
+      .mode-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d1d5db;
+      }
+
+      .mode-btn.active {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+        transform: translateY(-0.5px);
+      }
+
+      .mode-btn.active .mode-dot {
+        background: var(--accent-strong);
+      }
+
+      .mode-caption {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+      }
+
+      .step-list {
+        list-style: none;
+        margin: 0.25rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+
+      .step-list-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.3rem 0.55rem;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background 140ms ease, box-shadow 140ms ease,
+          transform 120ms ease, color 140ms ease;
+      }
+
+      .step-list-item:hover {
+        background: #f3f4ff;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+        transform: translateY(-0.5px);
+      }
+
+      .step-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        margin-top: 0.25rem;
+        flex-shrink: 0;
+      }
+
+      .step-list-label {
+        font-size: 0.85rem;
+      }
+
+      .step-list-caption {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .step-list-item.active {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+      }
+
+      .step-list-item.active .step-dot {
+        border-color: var(--accent-strong);
+        background: var(--accent-strong);
+      }
+
+      .step-list-item.completed .step-dot {
+        border-color: var(--accent);
+        background: var(--accent);
+      }
+
+      .step-list-item.inactive .step-dot {
+        opacity: 0.5;
+      }
+
+      .hint-card {
+        border-radius: 12px;
+        border: 1px dashed #cbd5f5;
+        padding: 0.65rem 0.8rem;
+        background: #f9fafb;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      .hint-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent-strong);
+      }
+
+      .hint-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-strong);
+      }
+
+      .story-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+
+      .mode-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        padding: 0.2rem 0.7rem;
+        border: 1px solid var(--border-subtle);
+        background: #f9fafb;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        align-self: flex-start;
+      }
+
+      .mode-pill strong {
+        font-weight: 600;
+        color: var(--accent-strong);
+      }
+
+      .question-text {
+        font-size: 0.95rem;
+        color: var(--text-main);
+      }
+
+      .story-shell {
+        margin-top: 0.4rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        background: radial-gradient(circle at top left, #ecfdf5, #ffffff);
+        position: relative;
+        overflow: hidden;
+        min-height: 260px;
+      }
+
+      .story-track {
+        display: flex;
+        width: 100%;
+        transition: transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      .story-step {
+        min-width: 100%;
+        box-sizing: border-box;
+        padding: 1rem 1.25rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        opacity: 0.4;
+        transform: translateX(12px) scale(0.99);
+        transition: opacity 220ms ease, transform 220ms ease;
+      }
+
+      .story-step.active {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+
+      .story-tag-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .story-tag {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent-strong);
+      }
+
+      .story-step-title {
+        font-size: 1.02rem;
+        font-weight: 600;
+      }
+
+      .story-body {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .story-body p {
+        margin: 0.2rem 0 0.5rem;
+      }
+
+      .story-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      .story-body ul {
+        margin: 0.25rem 0 0.4rem 1.1rem;
+        padding: 0;
+      }
+
+      .story-body li {
+        margin-bottom: 0.25rem;
+      }
+
+      .story-body strong {
+        font-weight: 600;
+      }
+
+      .equation {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: rgba(20, 184, 166, 0.06);
+        border: 1px solid rgba(20, 184, 166, 0.18);
+        font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.82rem;
+      }
+
+      .ice-table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 0.35rem;
+        font-size: 0.82rem;
+      }
+
+      .ice-table th,
+      .ice-table td {
+        border: 1px solid #e5e7eb;
+        padding: 0.25rem 0.4rem;
+        text-align: center;
+      }
+
+      .ice-table th {
+        background: #f9fafb;
+      }
+
+      .ice-row {
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 200ms ease, transform 200ms ease;
+      }
+
+      .ice-row.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .ice-label-cell {
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .ice-notes {
+        margin-top: 0.4rem;
+      }
+
+      .ice-note {
+        display: none;
+        font-size: 0.85rem;
+        color: var(--text-main);
+      }
+
+      .ice-note strong {
+        font-weight: 600;
+      }
+
+      .ice-note.active {
+        display: block;
+      }
+
+      .ice-subnav {
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.83rem;
+        color: var(--text-muted);
+      }
+
+      .ice-subnav-buttons {
+        display: inline-flex;
+        gap: 0.35rem;
+      }
+
+      .ice-subnav-counter {
+        text-align: right;
+      }
+
+      .muted {
+        color: var(--text-muted);
+      }
+
+      .story-nav {
+        margin-top: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .story-progress {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .story-progress strong {
+        color: var(--accent-strong);
+      }
+
+      .step-controls {
+        display: inline-flex;
+        gap: 0.4rem;
+      }
+
+      .step-btn {
+        padding: 0.3rem 0.85rem;
+        font-size: 0.85rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: #fff;
+        color: var(--accent-strong);
+        cursor: pointer;
+        transition: background 120ms ease, border-color 120ms ease,
+          box-shadow 120ms ease, transform 100ms ease;
+      }
+
+      .step-btn:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 3px 6px rgba(15, 23, 42, 0.18);
+        transform: translateY(-0.5px);
+      }
+
+      .step-btn[disabled] {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      button.primary {
+        padding: 0.45rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+      }
+
+      button.primary:hover:not([disabled]) {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+        transform: translateY(-1px);
+      }
+
+      button.primary[disabled] {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 1rem;
+        }
+
+        .app {
+          padding: 1rem 1.1rem 1.25rem;
+        }
+
+        .layout {
+          flex-direction: column;
+        }
+
+        .layout-left {
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-right: 0;
+          padding-bottom: 1rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .layout-right {
+          max-height: none;
+          padding-right: 0;
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.4rem;
+        }
+
+        body {
+          padding: 0.75rem;
+        }
+
+        .app {
+          padding: 0.85rem 0.85rem 1rem;
+          border-radius: 10px;
+        }
+
+        .story-shell {
+          min-height: 240px;
+        }
+
+        .story-step {
+          padding: 0.85rem 0.9rem 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>Weak Acid / Base Dissociation &mdash; ICE Table Walkthrough</h1>
+      <p class="small-muted">
+        Step through the dissociation of a weak acid (CH₃COOH) or a weak base
+        (NH₃), see how the ICE table is built, and watch how the
+        small‑<em>x</em> assumption leads to the familiar square‑root
+        expression for pH.
+      </p>
+
+      <div class="layout">
+        <!-- LEFT: mode + step overview -->
+        <div class="layout-left">
+          <div class="section">
+            <h2>1. Choose acid or base</h2>
+            <div class="mode-toggle" aria-label="Choose acid or base mode">
+              <button
+                type="button"
+                class="mode-btn active"
+                id="mode-acid"
+                data-mode="acid"
+              >
+                <span>Weak acid (CH₃COOH)</span>
+              </button>
+              <button
+                type="button"
+                class="mode-btn"
+                id="mode-base"
+                data-mode="base"
+              >
+                <span>Weak base (NH₃)</span>
+              </button>
+            </div>
+            <p class="mode-caption">
+              Default is the weak acid. Switch to the base mode to see the same
+              logic with a weak base and K<sub>b</sub>.
+            </p>
+          </div>
+
+          <div class="section">
+            <h2>2. Step-by-step view</h2>
+            <p class="small-muted">
+              Use this map to jump between stages. The story on the right will
+              slide to the matching panel.
+            </p>
+            <ol id="step-list" class="step-list" aria-label="Steps overview">
+              <!-- Filled by JavaScript -->
+            </ol>
+          </div>
+
+          <div class="section">
+            <h2>3. About the small‑x assumption</h2>
+            <div class="hint-card">
+              <div class="hint-badge">
+                <span class="hint-badge-dot"></span>
+                <span>Always check after solving</span>
+              </div>
+              <p>
+                We often assume <em>x</em> is negligible compared with the
+                initial concentration to simplify
+                K&nbsp;=&nbsp;<em>x</em><sup>2</sup>/C₀. This is only valid if
+                the % dissociation is small (typically below about 5&nbsp;%).
+                The final step reminds you what to do when you are given pH or
+                when the approximation breaks down.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: animated story -->
+        <div class="layout-right">
+          <div class="story-header">
+            <div class="mode-pill" id="mode-pill">
+              Mode:
+              <strong>Weak acid &middot; CH₃COOH</strong>
+            </div>
+            <div class="question-text" id="question-text">
+              <!-- Filled by JavaScript -->
+            </div>
+          </div>
+
+          <div class="story-shell" aria-live="polite">
+            <div class="story-track" id="story-track">
+              <!-- Steps populated by JavaScript -->
+            </div>
+          </div>
+
+          <div class="story-nav">
+            <div class="step-controls">
+              <button
+                type="button"
+                class="step-btn"
+                id="prev-step-btn"
+                disabled
+              >
+                ⟵ Previous
+              </button>
+              <button type="button" class="step-btn" id="next-step-btn">
+                Next ⟶
+              </button>
+            </div>
+            <div class="story-progress">
+              <span id="step-counter">Step 1 of 1</span>
+            </div>
+            <button
+              type="button"
+              class="primary"
+              id="restart-btn"
+              title="Back to the first step"
+            >
+              Restart story
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const log10 =
+          Math.log10 ||
+          function (x) {
+            return Math.log(x) / Math.LN10;
+          };
+
+        function formatNumber(value, digits) {
+          if (!isFinite(value)) return "";
+          return Number(value).toFixed(digits).replace(/\.?0+$/, function (
+            match
+          ) {
+            return match === ".0" || match === ".00" ? "" : match;
+          });
+        }
+
+        const KaAcid = 1.8e-5;
+        const C0Acid = 0.1; // mol dm^-3
+
+        const KbBase = 1.8e-5;
+        const C0Base = 0.1; // mol dm^-3
+
+        function buildAcidConfig() {
+          const hApprox = Math.sqrt(KaAcid * C0Acid);
+          const pHApprox = -log10(hApprox);
+          const percentDissociated = (hApprox / C0Acid) * 100;
+
+          // Display form of Ka: use real × and superscript characters
+          const KaText = "1.8 × 10⁻⁵";
+
+          const steps = [
+            {
+              id: "acid-1-question",
+              label: "Question",
+              caption: "Identify what is given and what is asked.",
+              title: "Start with the question",
+              tag: "Set-up",
+              body: `
+                <p>We start with a classic weak acid dissociation problem:</p>
+                <p>
+                  A <strong>0.10 mol dm⁻³</strong> solution of
+                  <strong>CH₃COOH</strong> has a volume of
+                  <strong>100 cm³</strong>. The acid dissociation constant is
+                  K<sub>a</sub> = <strong>${KaText}</strong>.
+                </p>
+                <p><strong>Task:</strong> Calculate the pH of this solution.</p>
+                <p class="muted">
+                  Because CH₃COOH is a weak acid, it only partially
+                  dissociates. That means we will use an
+                  <strong>ICE table</strong> and K<sub>a</sub> rather than
+                  assuming complete ionisation.
+                </p>
+              `,
+            },
+            {
+              id: "acid-2-ice",
+              label: "ICE table",
+              caption: "Reveal I, C and E without leaving the table.",
+              title: "Build the ICE table step by step",
+              tag: "ICE table",
+              body: `
+                <p>
+                  Use an ICE table to track the dissociation of CH₃COOH. Keep
+                  the table in view and reveal one row at a time.
+                </p>
+                <table class="ice-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>CH₃COOH</th>
+                      <th>CH₃COO⁻</th>
+                      <th>H⁺</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="ice-row" data-ice-stage="1">
+                      <td class="ice-label-cell">Initial (I)</td>
+                      <td>0.10</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                    <tr class="ice-row" data-ice-stage="2">
+                      <td class="ice-label-cell">Change (C)</td>
+                      <td>−x</td>
+                      <td>+x</td>
+                      <td>+x</td>
+                    </tr>
+                    <tr class="ice-row" data-ice-stage="3">
+                      <td class="ice-label-cell">Equilibrium (E)</td>
+                      <td>0.10 − x</td>
+                      <td>x</td>
+                      <td>x</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="ice-notes">
+                  <div class="ice-note" data-ice-note="1">
+                    <strong>I &mdash; Initial:</strong>
+                    only CH₃COOH is present at 0.10 mol dm⁻³; no CH₃COO⁻ or H⁺
+                    yet from this acid.
+                  </div>
+                  <div class="ice-note" data-ice-note="2">
+                    <strong>C &mdash; Change:</strong>
+                    a small amount <em>x</em> of CH₃COOH dissociates, so the
+                    acid decreases by <em>x</em> and both CH₃COO⁻ and H⁺
+                    increase by <em>x</em>.
+                  </div>
+                  <div class="ice-note" data-ice-note="3">
+                    <strong>E &mdash; Equilibrium:</strong>
+                    combine the I and C rows to get
+                    0.10 − <em>x</em>, <em>x</em>, <em>x</em>. These are the
+                    values that go into the K<sub>a</sub> expression.
+                  </div>
+                </div>
+                <div class="ice-subnav" data-ice-root="acid">
+                  <div class="ice-subnav-counter" data-ice-counter>
+                    ICE row 1 of 3 — I: Initial
+                  </div>
+                </div>
+              `,
+            },
+            {
+              id: "acid-5-ka-expression",
+              label: "Write Kₐ",
+              caption: "Write the equilibrium constant and substitute ICE values.",
+              title: "Write the Kₐ expression",
+              tag: "Equilibrium",
+              body: `
+                <p>For this equilibrium, the K<sub>a</sub> expression is</p>
+                <p>
+                  <span class="equation">
+                    K<sub>a</sub> = [H⁺][CH₃COO⁻] / [CH₃COOH]
+                  </span>
+                </p>
+                <p>Substitute the equilibrium values from the ICE table:</p>
+                <p>
+                  <span class="equation">
+                    K<sub>a</sub> = x² / (0.10 − x)
+                  </span>
+                </p>
+                <p>
+                  We now have an equation in terms of <strong>x</strong>, which
+                  represents [H⁺] at equilibrium.
+                </p>
+              `,
+            },
+            {
+              id: "acid-6-small-x",
+              label: "Assume small x",
+              caption: "Explain why 0.10 − x ≈ 0.10.",
+              title: "Why can we assume x is small?",
+              tag: "Approximation",
+              body: `
+                <p>
+                  Solving the exact expression
+                  <span class="equation">K<sub>a</sub> = x² / (0.10 - x)</span>
+                  would require a quadratic. But for a <em>weak</em> acid at a
+                  reasonably high concentration, the dissociation is usually
+                  small.
+                </p>
+                <p>
+                  We therefore <strong>assume</strong> that
+                  <span class="equation">x ≪ 0.10</span>, so
+                  <span class="equation">0.10 - x ≈ 0.10</span>.
+                </p>
+                <p class="muted">
+                  This turns the denominator into a constant and gives us a
+                  much simpler expression. We will <strong>check</strong> at the
+                  end that the % dissociation is indeed small enough for this
+                  approximation to be valid.
+                </p>
+              `,
+            },
+            {
+              id: "acid-7-root-equation",
+              label: "Square‑root form",
+              caption: "Turn Kₐ into x² = KₐC₀.",
+              title: "Form the square‑root equation",
+              tag: "Approximation",
+              body: `
+                <p>
+                  With <span class="equation">0.10 - x ≈ 0.10</span>, the
+                  expression becomes
+                </p>
+                <p>
+                  <span class="equation">
+                    K<sub>a</sub> ≈ x² / 0.10
+                  </span>
+                </p>
+                <p>Rearrange to solve for <strong>x</strong>:</p>
+                <p>
+                  <span class="equation">
+                    x² ≈ K<sub>a</sub> × 0.10 &nbsp;&nbsp;→&nbsp;&nbsp;
+                    x ≈ √(K<sub>a</sub> × 0.10)
+                  </span>
+                </p>
+                <p>
+                  In words: for a weak acid,
+                  <span class="equation">[H⁺] ≈ √(K<sub>a</sub>C₀)</span>.
+                </p>
+              `,
+            },
+            {
+              id: "acid-8-solve-h",
+              label: "Solve [H⁺]",
+              caption: "Compute [H⁺] using the approximation.",
+              title: "Solve for [H⁺]",
+              tag: "Calculation",
+              body: `
+                <p>Now substitute numerical values:</p>
+                <p>
+                  <span class="equation">
+                    [H⁺] ≈ x ≈ √(K<sub>a</sub>C₀) = √(${KaText} × 0.10)
+                  </span>
+                </p>
+                <p>
+                  This gives
+                  <span class="equation">
+                    [H⁺] ≈ ${formatNumber(hApprox, 3)} mol dm⁻³
+                  </span>
+                  .
+                </p>
+                <p class="muted">
+                  This <strong>x</strong> value came from our simplified (small
+                  <em>x</em>) expression. We will check shortly that it is
+                  indeed small compared to 0.10 mol dm⁻³.
+                </p>
+              `,
+            },
+            {
+              id: "acid-9-solve-ph",
+              label: "Find pH",
+              caption: "Convert [H⁺] to pH and check % dissociation.",
+              title: "Calculate the pH and check the assumption",
+              tag: "Calculation",
+              body: `
+                <p>Convert [H⁺] into pH:</p>
+                <p>
+                  <span class="equation">
+                    pH = −lg[H⁺] ≈ ${formatNumber(pHApprox, 2)}
+                  </span>
+                </p>
+                <p>Now check the small‑<em>x</em> assumption:</p>
+                <p>
+                  <span class="equation">
+                    % dissociation = [H⁺] / C₀ × 100
+                    ≈ ${formatNumber(hApprox, 3)} / 0.10 × 100
+                    ≈ ${formatNumber(percentDissociated, 1)} %
+                  </span>
+                </p>
+                <p class="muted">
+                  A dissociation of about
+                  ${formatNumber(
+                    percentDissociated,
+                    1
+                  )}% is comfortably below 5&nbsp;%, so treating
+                  <em>x</em> as negligible compared with 0.10 mol dm⁻³ is
+                  justified.
+                </p>
+              `,
+            },
+            {
+              id: "acid-10-disclaimer",
+              label: "When not to assume",
+              caption: "What if you already know pH or x is not small?",
+              title: "When you would not use the small‑x shortcut",
+              tag: "Extensions",
+              body: `
+                <p>
+                  If the question <strong>gives you pH</strong>, you can find
+                  [H⁺] (and therefore <em>x</em>) directly:
+                </p>
+                <ul>
+                  <li>
+                    Use pH to get [H⁺], then insert the <strong>exact</strong>
+                    ICE values into
+                    <span class="equation">
+                      K<sub>a</sub> = [H⁺][CH₃COO⁻] / [CH₃COOH]
+                    </span>
+                    .
+                  </li>
+                  <li>
+                    There is <strong>no need</strong> to assume that
+                    <span class="equation">x ≪ 0.10</span> in that situation.
+                  </li>
+                </ul>
+                <p>
+                  More generally, if the % dissociation works out to be large
+                  (say above 5&nbsp;%), you should:
+                </p>
+                <ul>
+                  <li>Go back to the exact K<sub>a</sub> expression, and</li>
+                  <li>solve the full quadratic instead of using √(K<sub>a</sub>C₀).</li>
+                </ul>
+                <p class="muted">
+                  The same logic will appear again in the weak base mode &mdash;
+                  just with K<sub>b</sub> and [OH⁻] instead of K<sub>a</sub> and
+                  [H⁺].
+                </p>
+              `,
+            },
+          ];
+
+          const questionHtml = `
+            For the weak acid mode, consider
+            <strong>0.10 mol dm⁻³ CH₃COOH</strong>, volume
+            <strong>100 cm³</strong>, with
+            K<sub>a</sub> = <strong>${KaText}</strong>. Find the pH.
+          `;
+
+          const modeLabel = "Weak acid · CH₃COOH";
+          const iceStepIndex = 1; // index of the ICE table step in this mode
+
+          return { steps, questionHtml, modeLabel, iceStepIndex };
+        }
+
+        function buildBaseConfig() {
+          const ohApprox = Math.sqrt(KbBase * C0Base);
+          const pOH = -log10(ohApprox);
+          const pH = 14 - pOH;
+          const percentDissociated = (ohApprox / C0Base) * 100;
+
+          // Display form of Kb: use real × and superscript characters
+          const KbText = "1.8 × 10⁻⁵";
+
+          const steps = [
+            {
+              id: "base-1-question",
+              label: "Question",
+              caption: "Set up the weak base problem.",
+              title: "Start with the question",
+              tag: "Set-up",
+              body: `
+                <p>Now switch to a weak base example:</p>
+                <p>
+                  A <strong>0.10 mol dm⁻³</strong> solution of
+                  <strong>NH₃</strong> has a volume of
+                  <strong>100 cm³</strong>. The base dissociation constant is
+                  K<sub>b</sub> = <strong>${KbText}</strong>.
+                </p>
+                <p><strong>Task:</strong> Calculate the pH of this solution.</p>
+                <p class="muted">
+                  NH₃ is a weak base, so it only partially accepts protons from
+                  water. We again use an ICE table, this time with
+                  K<sub>b</sub> and [OH⁻].
+                </p>
+              `,
+            },
+            {
+              id: "base-2-ice",
+              label: "ICE table",
+              caption: "Reveal I, C and E without leaving the table.",
+              title: "Build the ICE table step by step",
+              tag: "ICE table",
+              body: `
+                <p>
+                  Use an ICE table to track the reaction of NH₃ with water.
+                  Keep the table in view and reveal one row at a time.
+                </p>
+                <table class="ice-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>NH₃</th>
+                      <th>NH₄⁺</th>
+                      <th>OH⁻</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="ice-row" data-ice-stage="1">
+                      <td class="ice-label-cell">Initial (I)</td>
+                      <td>0.10</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                    <tr class="ice-row" data-ice-stage="2">
+                      <td class="ice-label-cell">Change (C)</td>
+                      <td>−x</td>
+                      <td>+x</td>
+                      <td>+x</td>
+                    </tr>
+                    <tr class="ice-row" data-ice-stage="3">
+                      <td class="ice-label-cell">Equilibrium (E)</td>
+                      <td>0.10 − x</td>
+                      <td>x</td>
+                      <td>x</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="ice-notes">
+                  <div class="ice-note" data-ice-note="1">
+                    <strong>I &mdash; Initial:</strong>
+                    only NH₃ is present at 0.10 mol dm⁻³; no NH₄⁺ or OH⁻ yet
+                    from this base.
+                  </div>
+                  <div class="ice-note" data-ice-note="2">
+                    <strong>C &mdash; Change:</strong>
+                    a small amount <em>x</em> of NH₃ reacts with water, so NH₃
+                    decreases by <em>x</em> and both NH₄⁺ and OH⁻ increase by
+                    <em>x</em>.
+                  </div>
+                  <div class="ice-note" data-ice-note="3">
+                    <strong>E &mdash; Equilibrium:</strong>
+                    combine the I and C rows to get
+                    0.10 − <em>x</em>, <em>x</em>, <em>x</em>. These are the
+                    values that go into the K<sub>b</sub> expression.
+                  </div>
+                </div>
+                <div class="ice-subnav" data-ice-root="base">
+                  <div class="ice-subnav-counter" data-ice-counter>
+                    ICE row 1 of 3 — I: Initial
+                  </div>
+                </div>
+              `,
+            },
+            {
+              id: "base-5-kb-expression",
+              label: "Write K_b",
+              caption: "Write the Kb expression and substitute x values.",
+              title: "Write the K_b expression",
+              tag: "Equilibrium",
+              body: `
+                <p>The K<sub>b</sub> expression for this equilibrium is</p>
+                <p>
+                  <span class="equation">
+                    K<sub>b</sub> = [NH₄⁺][OH⁻] / [NH₃]
+                  </span>
+                </p>
+                <p>Substitute the equilibrium concentrations:</p>
+                <p>
+                  <span class="equation">
+                    K<sub>b</sub> = x² / (0.10 − x)
+                  </span>
+                </p>
+                <p>
+                  Again, we have an equation in terms of
+                  <strong>x</strong>, which now represents [OH⁻] at
+                  equilibrium.
+                </p>
+              `,
+            },
+            {
+              id: "base-6-small-x",
+              label: "Assume small x",
+              caption: "Use the same small‑x argument as for the acid.",
+              title: "Use the small‑x assumption",
+              tag: "Approximation",
+              body: `
+                <p>
+                  Because NH₃ is a weak base and the solution is 0.10 mol dm⁻³,
+                  we expect the reaction with water to be small.
+                </p>
+                <p>
+                  Assume <span class="equation">x ≪ 0.10</span>, so
+                  <span class="equation">0.10 - x ≈ 0.10</span>. Then
+                </p>
+                <p>
+                  <span class="equation">
+                    K<sub>b</sub> ≈ x² / 0.10
+                  </span>
+                </p>
+                <p class="muted">
+                  This makes the algebra identical in form to the weak acid
+                  case, except that <strong>x is [OH⁻]</strong>.
+                </p>
+              `,
+            },
+            {
+              id: "base-7-root-equation",
+              label: "Square‑root form",
+              caption: "Turn Kb into x² = KbC₀.",
+              title: "Form the square‑root equation",
+              tag: "Approximation",
+              body: `
+                <p>Rearrange the approximate expression:</p>
+                <p>
+                  <span class="equation">
+                    x² ≈ K<sub>b</sub> × 0.10
+                    &nbsp;&nbsp;→&nbsp;&nbsp;
+                    x ≈ √(K<sub>b</sub> × 0.10)
+                  </span>
+                </p>
+                <p>
+                  In words: for a weak base,
+                  <span class="equation">[OH⁻] ≈ √(K<sub>b</sub>C₀)</span>.
+                </p>
+              `,
+            },
+            {
+              id: "base-8-solve-oh",
+              label: "Solve [OH⁻]",
+              caption: "Compute [OH⁻] and then pOH.",
+              title: "Solve for [OH⁻]",
+              tag: "Calculation",
+              body: `
+                <p>Substitute the numbers:</p>
+                <p>
+                  <span class="equation">
+                    [OH⁻] ≈ x ≈ √(K<sub>b</sub>C₀) =
+                    √(${KbText} × 0.10)
+                  </span>
+                </p>
+                <p>
+                  This gives
+                  <span class="equation">
+                    [OH⁻] ≈ ${formatNumber(ohApprox, 3)} mol dm⁻³
+                  </span>
+                  .
+                </p>
+                <p>Convert to pOH:</p>
+                <p>
+                  <span class="equation">
+                    pOH = −lg[OH⁻] ≈ ${formatNumber(pOH, 2)}
+                  </span>
+                </p>
+              `,
+            },
+            {
+              id: "base-9-solve-ph",
+              label: "Find pH",
+              caption: "Convert pOH to pH and check % dissociation.",
+              title: "Calculate pH and check the assumption",
+              tag: "Calculation",
+              body: `
+                <p>Use pH + pOH = 14.00 (at 25&nbsp;°C):</p>
+                <p>
+                  <span class="equation">
+                    pH = 14.00 − pOH ≈ 14.00 − ${formatNumber(
+                      pOH,
+                      2
+                    )} ≈ ${formatNumber(pH, 2)}
+                  </span>
+                </p>
+                <p>Check the small‑<em>x</em> assumption:</p>
+                <p>
+                  <span class="equation">
+                    % reaction = [OH⁻] / C₀ × 100
+                    ≈ ${formatNumber(ohApprox, 3)} / 0.10 × 100
+                    ≈ ${formatNumber(percentDissociated, 1)} %
+                  </span>
+                </p>
+                <p class="muted">
+                  Again, the dissociation is only about
+                  ${formatNumber(
+                    percentDissociated,
+                    1
+                  )}%, so treating <em>x</em> as negligible compared with
+                  0.10 mol dm⁻³ is reasonable.
+                </p>
+              `,
+            },
+            {
+              id: "base-10-disclaimer",
+              label: "When not to assume",
+              caption: "pH given, very dilute or relatively strong bases.",
+              title: "When you would not use the shortcut",
+              tag: "Extensions",
+              body: `
+                <p>
+                  If the question <strong>gives pH or pOH</strong>, you can
+                  calculate [H⁺] or [OH⁻] directly and then use the
+                  <strong>exact</strong> K<sub>b</sub> (or K<sub>a</sub>)
+                  expression without assuming
+                  <span class="equation">x ≪ C₀</span>.
+                </p>
+                <p>Also beware of:</p>
+                <ul>
+                  <li>Very dilute solutions (small C₀), or</li>
+                  <li>Bases with relatively large K<sub>b</sub>.</li>
+                </ul>
+                <p>
+                  In those cases the % reaction may no longer be small. Then you
+                  should:
+                </p>
+                <ul>
+                  <li>Use the full expression with <span class="equation">0.10 − x</span>, and</li>
+                  <li>Solve the quadratic for <em>x</em> instead of using √(K<sub>b</sub>C₀).</li>
+                </ul>
+                <p class="muted">
+                  The structure of the reasoning is identical to the weak acid
+                  example: ICE table → equilibrium expression → (maybe) small‑x
+                  approximation → check that the approximation was justified.
+                </p>
+              `,
+            },
+          ];
+
+          const questionHtml = `
+            For the weak base mode, consider
+            <strong>0.10 mol dm⁻³ NH₃</strong>, volume
+            <strong>100 cm³</strong>, with
+            K<sub>b</sub> = <strong>${KbText}</strong>. Find the pH.
+          `;
+
+          const modeLabel = "Weak base · NH₃";
+          const iceStepIndex = 1; // index of the ICE table step in this mode
+
+          return { steps, questionHtml, modeLabel, iceStepIndex };
+        }
+
+        const modePillEl = document.getElementById("mode-pill");
+        const questionTextEl = document.getElementById("question-text");
+        const stepListEl = document.getElementById("step-list");
+        const storyTrackEl = document.getElementById("story-track");
+        const stepCounterEl = document.getElementById("step-counter");
+
+        const prevBtn = document.getElementById("prev-step-btn");
+        const nextBtn = document.getElementById("next-step-btn");
+        const restartBtn = document.getElementById("restart-btn");
+
+        const modeButtons = document.querySelectorAll(".mode-btn");
+
+        let mode = "acid";
+        let currentIndex = 0;
+
+        const ICE_MAX_STAGE = 3;
+        const iceStageByMode = {
+          acid: 1,
+          base: 1,
+        };
+
+        function getConfig() {
+          return mode === "acid" ? buildAcidConfig() : buildBaseConfig();
+        }
+
+        function renderSteps() {
+          const config = getConfig();
+          const steps = config.steps;
+
+          // Update mode pill and question
+          modePillEl.innerHTML = `Mode: <strong>${config.modeLabel}</strong>`;
+          questionTextEl.innerHTML = config.questionHtml;
+
+          // Build left step map
+          stepListEl.innerHTML = "";
+          steps.forEach((step, index) => {
+            const li = document.createElement("li");
+            li.className = "step-list-item";
+            li.dataset.stepIndex = String(index);
+
+            const dot = document.createElement("div");
+            dot.className = "step-dot";
+
+            const textWrap = document.createElement("div");
+            const label = document.createElement("div");
+            label.className = "step-list-label";
+            label.textContent = `${index + 1}. ${step.label}`;
+
+            const caption = document.createElement("div");
+            caption.className = "step-list-caption";
+            caption.textContent = step.caption || "";
+
+            textWrap.appendChild(label);
+            textWrap.appendChild(caption);
+
+            li.appendChild(dot);
+            li.appendChild(textWrap);
+
+            li.addEventListener("click", function () {
+              goToStep(index);
+            });
+
+            stepListEl.appendChild(li);
+          });
+
+          // Build story steps
+          storyTrackEl.innerHTML = "";
+          steps.forEach((step, index) => {
+            const article = document.createElement("article");
+            article.className = "story-step";
+            article.dataset.stepIndex = String(index);
+
+            const tagRow = document.createElement("div");
+            tagRow.className = "story-tag-row";
+
+            const tag = document.createElement("div");
+            tag.className = "story-tag";
+            tag.textContent = `${index + 1} · ${step.tag || ""}`;
+
+            tagRow.appendChild(tag);
+
+            const title = document.createElement("div");
+            title.className = "story-step-title";
+            title.textContent = step.title;
+
+            const body = document.createElement("div");
+            body.className = "story-body";
+            body.innerHTML = step.body;
+
+            article.appendChild(tagRow);
+            article.appendChild(title);
+            article.appendChild(body);
+
+            storyTrackEl.appendChild(article);
+          });
+
+          // Ensure index is in range and update state
+          if (currentIndex >= steps.length) {
+            currentIndex = steps.length - 1;
+          }
+          if (currentIndex < 0) currentIndex = 0;
+
+          updateActiveVisuals();
+          setupIceTables();
+        }
+
+        function updateActiveVisuals() {
+          const config = getConfig();
+          const steps = config.steps;
+          const total = steps.length;
+
+          // Update story track transform
+          storyTrackEl.style.transform = `translateX(-${
+            currentIndex * 100
+          }%)`;
+
+          // Highlight current card
+          storyTrackEl
+            .querySelectorAll(".story-step")
+            .forEach(function (el) {
+              const idx = Number(el.dataset.stepIndex || "0");
+              if (idx === currentIndex) {
+                el.classList.add("active");
+              } else {
+                el.classList.remove("active");
+              }
+            });
+
+          // Update left step list state
+          stepListEl.querySelectorAll(".step-list-item").forEach(function (el) {
+            const idx = Number(el.dataset.stepIndex || "0");
+            el.classList.remove("active", "completed", "inactive");
+            if (idx === currentIndex) {
+              el.classList.add("active");
+            } else if (idx < currentIndex) {
+              el.classList.add("completed");
+            } else {
+              el.classList.add("inactive");
+            }
+          });
+
+          // Update progress text
+          stepCounterEl.textContent = `Step ${
+            currentIndex + 1
+          } of ${total}`;
+
+          // Update buttons
+          prevBtn.disabled = currentIndex === 0;
+          nextBtn.disabled = currentIndex === total - 1;
+          restartBtn.disabled = currentIndex === 0;
+        }
+
+        function goToStep(index) {
+          const config = getConfig();
+          const steps = config.steps;
+          if (!steps.length) return;
+
+          const clamped = Math.max(0, Math.min(index, steps.length - 1));
+          if (clamped === currentIndex) return;
+
+          currentIndex = clamped;
+          updateActiveVisuals();
+        }
+
+        function setupIceTables() {
+          applyIceStage("acid");
+          applyIceStage("base");
+        }
+
+        function applyIceStage(modeKey) {
+          const stage = iceStageByMode[modeKey] || 1;
+          const root = document.querySelector(
+            '.ice-subnav[data-ice-root="' + modeKey + '"]'
+          );
+          if (!root) return;
+
+          const container = root.closest(".story-step");
+          if (!container) return;
+
+          const rows = container.querySelectorAll(".ice-row");
+          const notes = container.querySelectorAll(".ice-note");
+          const counter = root.querySelector("[data-ice-counter]");
+
+          if (!rows.length) return;
+
+          rows.forEach(function (row) {
+            const s = Number(row.getAttribute("data-ice-stage") || "1");
+            if (s <= stage) {
+              row.classList.add("visible");
+            } else {
+              row.classList.remove("visible");
+            }
+          });
+
+          notes.forEach(function (note) {
+            const s = Number(note.getAttribute("data-ice-note") || "1");
+            if (s === stage) {
+              note.classList.add("active");
+            } else {
+              note.classList.remove("active");
+            }
+          });
+
+          if (counter) {
+            const labels = ["I: Initial", "C: Change", "E: Equilibrium"];
+            counter.textContent = `ICE row ${stage} of ${ICE_MAX_STAGE} — ${
+              labels[stage - 1] || ""
+            }`;
+          }
+        }
+
+        // Mode switching
+        modeButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            const newMode = btn.dataset.mode === "base" ? "base" : "acid";
+            if (newMode === mode) return;
+            mode = newMode;
+            currentIndex = 0;
+
+            if (!(mode in iceStageByMode)) {
+              iceStageByMode[mode] = 1;
+            }
+
+            modeButtons.forEach(function (b) {
+              if (b.dataset.mode === newMode) {
+                b.classList.add("active");
+              } else {
+                b.classList.remove("active");
+              }
+            });
+
+            renderSteps();
+          });
+        });
+
+        // Navigation buttons
+        prevBtn.addEventListener("click", function () {
+          const config = getConfig();
+          const iceIndex = config.iceStepIndex;
+          const modeKey = mode;
+
+          if (typeof iceIndex === "number" && currentIndex === iceIndex) {
+            const currentStage = iceStageByMode[modeKey] || 1;
+            if (currentStage > 1) {
+              iceStageByMode[modeKey] = currentStage - 1;
+              applyIceStage(modeKey);
+              return;
+            }
+          }
+
+          goToStep(currentIndex - 1);
+        });
+
+        nextBtn.addEventListener("click", function () {
+          const config = getConfig();
+          const iceIndex = config.iceStepIndex;
+          const modeKey = mode;
+
+          if (typeof iceIndex === "number" && currentIndex === iceIndex) {
+            const currentStage = iceStageByMode[modeKey] || 1;
+            if (currentStage < ICE_MAX_STAGE) {
+              iceStageByMode[modeKey] = currentStage + 1;
+              applyIceStage(modeKey);
+              return;
+            }
+          }
+
+          goToStep(currentIndex + 1);
+        });
+
+        restartBtn.addEventListener("click", function () {
+          goToStep(0);
+          iceStageByMode[mode] = 1;
+          applyIceStage(mode);
+        });
+
+        // Keyboard navigation for smooth study flow
+        window.addEventListener("keydown", function (event) {
+          if (event.key === "ArrowRight") {
+            nextBtn.click();
+          } else if (event.key === "ArrowLeft") {
+            prevBtn.click();
+          }
+        });
+
+        // Initial render
+        renderSteps();
+      })();
+    </script>
+  </body>
+</html>
