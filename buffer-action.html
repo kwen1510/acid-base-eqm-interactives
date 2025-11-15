@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Buffer Action Simulator</title>
+    <style>
+      :root {
+        --accent: #0f766e;
+        --accent-soft: #ecfdf5;
+        --accent-strong: #0d9488;
+        --accent-orange: #f97316;
+        --accent-orange-dark: #ea580c;
+        --border-subtle: #e5e7eb;
+        --bg-page: #f3f4f6;
+        --bg-card: #ffffff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --danger: #b91c1c;
+        --danger-soft: #fef2f2;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: var(--bg-page);
+        color: var(--text-main);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin-top: 0;
+      }
+
+      .app {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        padding: 1.5rem 2rem 2rem;
+        border-radius: 14px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
+      }
+
+      .layout {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .layout-left {
+        flex: 0 0 280px;
+        border-right: 1px solid var(--border-subtle);
+        padding-right: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .layout-right {
+        flex: 1 1 auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+        scroll-behavior: smooth;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section {
+        margin-top: 0.25rem;
+      }
+
+      .section h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .small-muted {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .control-card {
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        padding: 0.75rem 0.9rem;
+        background: #f9fafb;
+        margin-top: 0.5rem;
+      }
+
+      .control-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .control-label-main {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .control-label-caption {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .control-value {
+        font-size: 0.85rem;
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .slider-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+
+      .step-units {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .step-btn {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: #fff;
+        color: var(--accent-strong);
+        cursor: pointer;
+        transition: background 120ms ease, border-color 120ms ease,
+          box-shadow 120ms ease, transform 100ms ease;
+      }
+
+      .step-btn:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 3px 6px rgba(15, 23, 42, 0.18);
+        transform: translateY(-0.5px);
+      }
+
+      .step-btn[disabled] {
+        opacity: 0.4;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      select {
+        width: 100%;
+        padding: 0.45rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        font-size: 0.9rem;
+        background: #f9fafb;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.25);
+      }
+
+      button {
+        padding: 0.45rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+      }
+
+      button.secondary {
+        background: #fff;
+        color: var(--accent);
+      }
+
+      button:hover:not([disabled]) {
+        background: var(--accent-strong);
+        border-color: var(--accent-strong);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+        transform: translateY(-1px);
+      }
+
+      button.secondary:hover:not([disabled]) {
+        background: var(--accent-soft);
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+      }
+
+      button[disabled] {
+        opacity: 0.5;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .ph-display {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        padding: 0.75rem 0.9rem;
+        background: #f9fafb;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .ph-number {
+        font-size: 2.1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--accent-strong);
+        min-width: 4.3rem;
+        text-align: center;
+      }
+
+      .ph-context {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        font-size: 0.8rem;
+        background: #f9fafb;
+      }
+
+      .status-pill.good {
+        border-color: var(--accent-strong);
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+      }
+
+      .status-pill.warning {
+        border-color: var(--accent-orange);
+        background: #fffbeb;
+        color: var(--accent-orange-dark);
+      }
+
+      .status-pill.danger {
+        border-color: var(--danger);
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: #e5e7eb;
+        font-size: 0.75rem;
+      }
+
+      .tag-strong {
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+      }
+
+      .species-acid {
+        color: #b91c1c;
+        font-weight: 600;
+      }
+
+      .species-base {
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+      }
+
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 0.35rem 0.5rem;
+        text-align: center;
+      }
+
+      th {
+        background: #f9fafb;
+        font-weight: 600;
+      }
+
+      .equation-card {
+        margin-top: 0.25rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        background: #f9fafb;
+        padding: 0.75rem 0.9rem;
+        font-size: 0.9rem;
+      }
+
+      .hh-line {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .hh-line:last-child {
+        margin-bottom: 0;
+      }
+
+      .hh-value {
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .hh-static {
+        color: var(--text-muted);
+      }
+
+      .note {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.45rem;
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          flex-direction: column;
+        }
+
+        .layout-left {
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-right: 0;
+          padding-bottom: 1rem;
+        }
+
+        .layout-right {
+          max-height: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>Buffer Action Simulator</h1>
+      <p class="small-muted">
+        Start with a weak acid–conjugate base pair (or weak base–conjugate
+        acid), then "add" solid NaOH or bubble HCl into
+        <strong>1.00&nbsp;dm³</strong> of buffer. Watch how the conjugate pair
+        shifts and how the Henderson–Hasselbalch calculation of pH responds.
+      </p>
+
+      <div class="layout">
+        <!-- LEFT: controls -->
+        <div class="layout-left">
+          <div class="section">
+            <h2>1. Choose a buffer pair</h2>
+            <select id="buffer-system-select"></select>
+            <p class="small-muted" id="buffer-description"></p>
+          </div>
+
+          <div class="section">
+            <h2>2. Add strong acid / base</h2>
+            <p class="small-muted">
+              Use the buttons to add or remove fixed amounts of <strong>HCl (aq)</strong> and
+              <strong>NaOH (aq)</strong>. Each click changes the amount by the number on the
+              button multiplied by <strong>10⁻³ mol</strong> in 1.00&nbsp;dm³ (for example,
+              +2 means +2 × 10⁻³ mol). The ranges are chosen so that the buffer always stays
+              in pK<sub>a</sub> ± 1.
+            </p>
+
+            <div class="control-card">
+              <div class="control-header">
+                <div>
+                  <div class="control-label-main">HCl added (strong acid)</div>
+                  <div class="control-label-caption">
+                    H⁺ will react with the base form of the buffer.
+                  </div>
+                </div>
+                <div class="control-value">
+                  Added: <span id="acid-added-display">0</span> × 10⁻³ mol
+                </div>
+              </div>
+              <div class="slider-row">
+                <button type="button" class="step-btn" id="acid-minus-btn">
+                  −2
+                </button>
+                <button type="button" class="step-btn" id="acid-plus-btn">
+                  +2
+                </button>
+                <span class="step-units">× 10⁻³ mol per step</span>
+              </div>
+            </div>
+
+            <div class="control-card">
+              <div class="control-header">
+                <div>
+                  <div class="control-label-main">NaOH added (strong base)</div>
+                  <div class="control-label-caption">
+                    OH⁻ will react with the acid form of the buffer.
+                  </div>
+                </div>
+                <div class="control-value">
+                  Added: <span id="base-added-display">0</span> × 10⁻³ mol
+                </div>
+              </div>
+              <div class="slider-row">
+                <button type="button" class="step-btn" id="base-minus-btn">
+                  −2
+                </button>
+                <button type="button" class="step-btn" id="base-plus-btn">
+                  +2
+                </button>
+                <span class="step-units">× 10⁻³ mol per step</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+              <button id="reset-additions-btn" class="secondary">
+                Reset additions
+              </button>
+            </div>
+
+            <p class="note">
+              Any H⁺ and OH⁻ you add first neutralise each other, then shift the
+              balance between the acid and base forms of the buffer.
+            </p>
+          </div>
+        </div>
+
+        <!-- RIGHT: visualisation + working -->
+        <div class="layout-right">
+          <div class="section">
+            <h2>3. Buffer pH</h2>
+            <div class="ph-display">
+              <div class="ph-number" id="ph-number">7.00</div>
+              <div class="ph-context" id="ph-context">
+                pH before any strong acid or base is added.
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2>4. Acid and base in the buffer</h2>
+            <p class="small-muted">
+              The buffer pair is written as
+              <span class="tag" id="pair-label-pill"></span>. The table shows
+              moles and concentrations <em>after</em> H⁺/OH⁻ have reacted.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Species</th>
+                  <th>Initial moles</th>
+                  <th>Final moles</th>
+                  <th>[Species] / mol&nbsp;dm⁻³</th>
+                </tr>
+              </thead>
+              <tbody id="composition-body"></tbody>
+            </table>
+          </div>
+
+          <div class="section">
+            <h2>5. Henderson–Hasselbalch working</h2>
+            <div class="equation-card" id="hh-card">
+              <div class="hh-line hh-static">
+                pH = pK<sub>a</sub> + lg
+                <span class="hh-static">([base form]/[acid form])</span>
+              </div>
+              <div id="hh-working"></div>
+            </div>
+            <p class="note" id="hh-note"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const volumeL = 1.0;
+
+      const bufferSystems = [
+        {
+          id: "acidic",
+          name: "Acidic buffer: CH₃COOH / CH₃COO⁻",
+          description:
+            "CH₃COOH / CH₃COO⁻ buffer with pK\u2090 = 4.76. Start: 0.010 mol of each in 1.00 dm\u00b3.",
+          pKa: 4.76,
+          acidLabel: "CH\u2083COOH",
+          baseLabel: "CH\u2083COO\u207b",
+          initialMolesAcid: 0.01,
+          initialMolesBase: 0.01,
+        },
+        {
+          id: "basic",
+          name: "Basic buffer: NH\u2084\u207a / NH\u2083",
+          description:
+            "NH\u2084\u207a / NH\u2083 buffer with pK\u2090 \u2248 9.25. Start: 0.010 mol of each in 1.00 dm\u00b3.",
+          pKa: 9.25,
+          acidLabel: "NH\u2084\u207a",
+          baseLabel: "NH\u2083",
+          initialMolesAcid: 0.01,
+          initialMolesBase: 0.01,
+        },
+      ];
+
+      const selectEl = document.getElementById("buffer-system-select");
+      const bufferDescriptionEl = document.getElementById("buffer-description");
+      const pairLabelPill = document.getElementById("pair-label-pill");
+
+      const acidMinusBtn = document.getElementById("acid-minus-btn");
+      const acidPlusBtn = document.getElementById("acid-plus-btn");
+      const baseMinusBtn = document.getElementById("base-minus-btn");
+      const basePlusBtn = document.getElementById("base-plus-btn");
+      const acidAddedDisplay = document.getElementById("acid-added-display");
+      const baseAddedDisplay = document.getElementById("base-added-display");
+      const resetAdditionsBtn = document.getElementById("reset-additions-btn");
+
+      const phNumberEl = document.getElementById("ph-number");
+      const phContextEl = document.getElementById("ph-context");
+
+      const compositionBody = document.getElementById("composition-body");
+
+      const hhWorkingEl = document.getElementById("hh-working");
+      const hhNoteEl = document.getElementById("hh-note");
+
+      const STEP_MOL = 2e-3; // change in mol per click, in 1.00 dm³
+      const pKw = 14.0;
+      const MAX_STEPS = 4; // up to ±4 steps keeps pH within pKa ± 1
+      let acidSteps = 0;
+      let baseSteps = 0;
+
+      function populateSelect() {
+        bufferSystems.forEach((system) => {
+          const opt = document.createElement("option");
+          opt.value = system.id;
+          opt.textContent = system.name;
+          selectEl.appendChild(opt);
+        });
+      }
+
+      function getCurrentSystem() {
+        const id = selectEl.value || bufferSystems[0].id;
+        return bufferSystems.find((s) => s.id === id) || bufferSystems[0];
+      }
+
+      function log10Safe(x) {
+        if (x <= 0) return NaN;
+        return Math.log10 ? Math.log10(x) : Math.log(x) / Math.LN10;
+      }
+
+      function computeState(system, acidSteps, baseSteps) {
+        const nAF0 = system.initialMolesAcid;
+        const nBF0 = system.initialMolesBase;
+
+        // Net "acid equivalents" added via strong acid/base
+        const netSteps = acidSteps - baseSteps;
+        const deltaMol = netSteps * STEP_MOL;
+
+        const nAF = nAF0 + deltaMol;
+        const nBF = nBF0 - deltaMol;
+
+        const concAF = nAF / volumeL;
+        const concBF = nBF / volumeL;
+
+        const ratio = concBF / concAF;
+        const logRatio = log10Safe(ratio);
+        const pH = system.pKa + logRatio;
+
+        return {
+          nAF0,
+          nBF0,
+          nAF,
+          nBF,
+          concAF,
+          concBF,
+          ratio,
+          logRatio,
+          pH,
+          acidSteps,
+          baseSteps,
+        };
+      }
+
+      function formatMol(value) {
+        return value.toFixed(3);
+      }
+
+      function updateUI() {
+        const system = getCurrentSystem();
+        bufferDescriptionEl.textContent = system.description;
+        pairLabelPill.textContent = `${system.acidLabel} / ${system.baseLabel}`;
+
+        const stepsToCoeff = STEP_MOL / 1e-3; // converts steps to ×10⁻³ mol
+        const acidCoeff = acidSteps * stepsToCoeff;
+        const baseCoeff = baseSteps * stepsToCoeff;
+        acidAddedDisplay.textContent = acidCoeff.toFixed(0);
+        baseAddedDisplay.textContent = baseCoeff.toFixed(0);
+
+        const state = computeState(system, acidSteps, baseSteps);
+
+        // pH display (always from Henderson–Hasselbalch)
+        const pH = state.pH;
+        const pHDisplay =
+          isFinite(pH) && !isNaN(pH) ? pH.toFixed(2) : "—";
+        phNumberEl.textContent = pHDisplay;
+
+        if (acidSteps === 0 && baseSteps === 0) {
+          phContextEl.textContent =
+            "Initial buffer pH (no strong acid or base added).";
+        } else if (state.ratio > 1) {
+          phContextEl.textContent =
+            "More base form than acid form: the pH is slightly above pK\u2090.";
+        } else if (state.ratio < 1) {
+          phContextEl.textContent =
+            "More acid form than base form: the pH is slightly below pK\u2090.";
+        } else {
+          phContextEl.textContent =
+            "Equal acid and base forms: pH is exactly pK\u2090.";
+        }
+
+        // Composition table
+        const rows = [];
+        rows.push({
+          label: `${system.acidLabel} (acid form)`,
+          initial: state.nAF0,
+          final: state.nAF,
+          conc: state.concAF,
+          kind: "acid",
+        });
+        rows.push({
+          label: `${system.baseLabel} (base form)`,
+          initial: state.nBF0,
+          final: state.nBF,
+          conc: state.concBF,
+          kind: "base",
+        });
+
+        compositionBody.innerHTML = "";
+        rows.forEach((row) => {
+          const tr = document.createElement("tr");
+          const tdLabel = document.createElement("td");
+          const tdInitial = document.createElement("td");
+          const tdFinal = document.createElement("td");
+          const tdConc = document.createElement("td");
+
+          tdLabel.textContent = row.label;
+          tdInitial.textContent = formatMol(row.initial);
+          tdFinal.textContent = formatMol(row.final);
+          tdConc.textContent = formatMol(row.conc);
+
+          if (row.kind === "acid") {
+            tdLabel.classList.add("species-acid");
+            tdConc.classList.add("species-acid");
+          } else if (row.kind === "base") {
+            tdLabel.classList.add("species-base");
+            tdConc.classList.add("species-base");
+          }
+
+          tr.appendChild(tdLabel);
+          tr.appendChild(tdInitial);
+          tr.appendChild(tdFinal);
+          tr.appendChild(tdConc);
+          compositionBody.appendChild(tr);
+        });
+
+        // Henderson–Hasselbalch / buffer working
+        hhWorkingEl.innerHTML = "";
+        hhNoteEl.textContent = "";
+        if (system.id === "acidic") {
+          const line1 = document.createElement("div");
+          line1.className = "hh-line";
+          line1.innerHTML =
+            'pH = pK\u2090 + lg( [<span class="species-base">' +
+            system.baseLabel +
+            "</span>] / [<span class=\"species-acid\">" +
+            system.acidLabel +
+            "</span>] )";
+
+          const line2 = document.createElement("div");
+          line2.className = "hh-line";
+          line2.innerHTML =
+            "pH = <span class=\"hh-value\">" +
+            system.pKa.toFixed(2) +
+            "</span> + lg( [<span class=\"species-base\">" +
+            system.baseLabel +
+            "</span>] / [<span class=\"species-acid\">" +
+            system.acidLabel +
+            "</span>] )";
+
+          const line3 = document.createElement("div");
+          line3.className = "hh-line";
+          line3.innerHTML =
+            "pH = " +
+            system.pKa.toFixed(2) +
+            " + lg( <span class=\"species-base\">" +
+            state.concBF.toFixed(3) +
+            "</span> / <span class=\"species-acid\">" +
+            state.concAF.toFixed(3) +
+            "</span> )";
+
+          const line4 = document.createElement("div");
+          line4.className = "hh-line";
+          line4.innerHTML =
+            "pH = " +
+            system.pKa.toFixed(2) +
+            " + <span class=\"hh-value\">lg " +
+            state.logRatio.toFixed(2) +
+            "</span> = <span class=\"hh-value\">" +
+            pH.toFixed(2) +
+            "</span>";
+
+          hhWorkingEl.appendChild(line1);
+          hhWorkingEl.appendChild(line2);
+          hhWorkingEl.appendChild(line3);
+          hhWorkingEl.appendChild(line4);
+        } else {
+          const pKb = pKw - system.pKa;
+          const ratioAcidBase = state.concAF / state.concBF;
+          const logRatioAB = log10Safe(ratioAcidBase);
+          const pOH = pKb + logRatioAB;
+          const pH_from_pOH = pKw - pOH;
+          const concOH = Math.pow(10, -pOH);
+          const concH = Math.pow(10, -pH_from_pOH);
+
+          const line1 = document.createElement("div");
+          line1.className = "hh-line";
+          line1.innerHTML =
+            "pOH = pK<sub>b</sub> + lg( [<span class=\"species-acid\">" +
+            system.acidLabel +
+            "</span>] / [<span class=\"species-base\">" +
+            system.baseLabel +
+            "</span>] )";
+
+          const line2 = document.createElement("div");
+          line2.className = "hh-line";
+          line2.innerHTML =
+            "pOH = <span class=\"hh-value\">" +
+            pKb.toFixed(2) +
+            "</span> + lg( [<span class=\"species-acid\">" +
+            system.acidLabel +
+            "</span>] / [<span class=\"species-base\">" +
+            system.baseLabel +
+            "</span>] )";
+
+          const line3 = document.createElement("div");
+          line3.className = "hh-line";
+          line3.innerHTML =
+            "pOH = " +
+            pKb.toFixed(2) +
+            " + lg( <span class=\"species-acid\">" +
+            state.concAF.toFixed(3) +
+            "</span> / <span class=\"species-base\">" +
+            state.concBF.toFixed(3) +
+            "</span> )";
+
+          const line4 = document.createElement("div");
+          line4.className = "hh-line";
+          line4.innerHTML =
+            "pOH = " +
+            pKb.toFixed(2) +
+            " + <span class=\"hh-value\">lg " +
+            logRatioAB.toFixed(2) +
+            "</span> = <span class=\"hh-value\">" +
+            pOH.toFixed(2) +
+            "</span>";
+
+          const line5 = document.createElement("div");
+          line5.className = "hh-line";
+          line5.innerHTML =
+            "[OH\u207b] = 10<sup>-pOH</sup> = 10<sup>-" +
+            pOH.toFixed(2) +
+            "</sup> \u2248 <span class=\"hh-value\">" +
+            concOH.toExponential(2) +
+            "</span> mol dm\u207b\u00b3";
+
+          const line6 = document.createElement("div");
+          line6.className = "hh-line";
+          line6.innerHTML =
+            "[H\u207a] = 10\u207b\u00b9\u2074 / [OH\u207b] \u2248 <span class=\"hh-value\">" +
+            concH.toExponential(2) +
+            "</span> mol dm\u207b\u00b3";
+
+          const line7 = document.createElement("div");
+          line7.className = "hh-line";
+          line7.innerHTML =
+            "pH = -lg[H\u207a] = <span class=\"hh-value\">" +
+            pH_from_pOH.toFixed(2) +
+            "</span>";
+
+          hhWorkingEl.appendChild(line1);
+          hhWorkingEl.appendChild(line2);
+          hhWorkingEl.appendChild(line3);
+          hhWorkingEl.appendChild(line4);
+          hhWorkingEl.appendChild(line5);
+          hhWorkingEl.appendChild(line6);
+          hhWorkingEl.appendChild(line7);
+        }
+
+        const delta = Math.abs(pH - system.pKa);
+        if (delta <= 1) {
+          hhNoteEl.textContent =
+            "Because pH is within pK\u2090 ± 1, both acid and base forms are present in significant amounts and the buffer is effective.";
+        } else {
+          hhNoteEl.textContent =
+            "Here the ratio of conjugate pair is moving outside the usual buffer range; with the current button limits this should not normally happen.";
+        }
+      }
+
+      function init() {
+        populateSelect();
+        selectEl.value = bufferSystems[0].id;
+        acidSteps = 0;
+        baseSteps = 0;
+
+        selectEl.addEventListener("change", () => {
+          acidSteps = 0;
+          baseSteps = 0;
+          updateUI();
+        });
+
+        acidMinusBtn.addEventListener("click", () => {
+          acidSteps = Math.max(0, acidSteps - 1);
+          updateUI();
+        });
+        acidPlusBtn.addEventListener("click", () => {
+          acidSteps = Math.min(MAX_STEPS, acidSteps + 1);
+          updateUI();
+        });
+
+        baseMinusBtn.addEventListener("click", () => {
+          baseSteps = Math.max(0, baseSteps - 1);
+          updateUI();
+        });
+        basePlusBtn.addEventListener("click", () => {
+          baseSteps = Math.min(MAX_STEPS, baseSteps + 1);
+          updateUI();
+        });
+
+        resetAdditionsBtn.addEventListener("click", () => {
+          acidSteps = 0;
+          baseSteps = 0;
+          updateUI();
+        });
+
+        updateUI();
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>
