@@ -11,55 +11,74 @@
     body {
       margin: 0;
       font-family: "Inter", sans-serif;
-      background: #f4f6fa;
+      background: linear-gradient(135deg, #eef6ff, #f5fbff);
+      min-height: 100vh;
       color: #333;
     }
 
-    header {
+    /* Header Banner */
+    .banner {
+      background: linear-gradient(135deg, #3b7bff, #5fa8ff);
+      padding: 50px 20px;
       text-align: center;
-      padding: 40px 20px;
+      color: white;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
     }
 
-    header h1 {
-      font-size: 2rem;
+    .banner h1 {
+      margin: 0;
+      font-size: 2.2rem;
       font-weight: 600;
-      margin-bottom: 10px;
     }
 
-    header p {
-      font-size: 1rem;
-      color: #666;
+    .banner p {
+      margin-top: 10px;
+      font-size: 1.05rem;
+      opacity: 0.9;
     }
 
+    /* Container Grid */
     .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      max-width: 1100px;
-      margin: auto;
+      gap: 25px;
     }
 
+    /* Card Styling */
     .card {
-      background: white;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 18px;
+      padding: 26px;
       text-decoration: none;
       color: inherit;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
       display: block;
     }
 
     .card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 12px 22px rgba(0,0,0,0.12);
+      box-shadow: 0 16px 26px rgba(0,0,0,0.15);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      margin-bottom: 12px;
+      opacity: 0.85;
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #2b64ff;
     }
 
@@ -68,30 +87,56 @@
       color: #555;
     }
   </style>
+
 </head>
 
 <body>
 
-  <header>
+  <!-- Header -->
+  <div class="banner">
     <h1>Acid–Base Equilibria Interactives</h1>
-    <p>This page contains interactives to help you learn acid–base equilibria.</p>
-  </header>
+    <p>Explore algorithms, buffer concepts, and equilibrium models through interactive tools.</p>
+  </div>
 
+  <!-- Cards -->
   <div class="container">
 
-    <!-- CARD 1 -->
-    <a class="card" href="https://kwen1510.github.io/acid-base-eqm-interactives/algorithms-basic.html">
+    <!-- 1. Basic Algorithms -->
+    <a class="card" href="algorithms-basic.html">
+      <svg class="icon" viewBox="0 0 24 24">
+        <path fill="#2b64ff" d="M7 2v2h10V2h2v2h3v2H2V4h3V2h2zm-2 6h14l-1.5 14h-11L5 8z"/>
+      </svg>
       <div class="card-title">Basic Algorithms</div>
-      <div class="card-desc">Interactive walkthrough of the core algorithms for acid–base equilibrium calculations.</div>
+      <div class="card-desc">Fundamental steps for solving acid–base equilibrium systems.</div>
     </a>
 
-    <!-- CARD TEMPLATE FOR FUTURE EXPANSION -->
-    <!--
-    <a class="card" href="#">
-      <div class="card-title">Title of Next Interactive</div>
-      <div class="card-desc">Short description of what it does.</div>
+    <!-- 2. Weak Acid Algorithms -->
+    <a class="card" href="algorithms-weak-acid.html">
+      <svg class="icon" viewBox="0 0 24 24">
+        <path fill="#2b64ff" d="M12 2L4 22h16L12 2zm0 4.8l4.5 12.2h-9L12 6.8z"/>
+      </svg>
+      <div class="card-title">Weak Acid Algorithms</div>
+      <div class="card-desc">ICE tables, Ka expressions, approximations and pH calculations.</div>
     </a>
-    -->
+
+    <!-- 3. Weak Base Algorithms -->
+    <a class="card" href="algorithms-weak-base.html">
+      <svg class="icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="7" r="5" fill="#2b64ff"/>
+        <path fill="#2b64ff" d="M4 22c0-4 3-7 8-7s8 3 8 7H4z"/>
+      </svg>
+      <div class="card-title">Weak Base Algorithms</div>
+      <div class="card-desc">Kb calculations, conjugate acid relationships, and pOH/pH methods.</div>
+    </a>
+
+    <!-- 4. Buffer Action -->
+    <a class="card" href="buffer-action.html">
+      <svg class="icon" viewBox="0 0 24 24">
+        <path fill="#2b64ff" d="M5 3h14v4H5V3zm0 6h14v4H5V9zm0 6h14v4H5v-4z"/>
+      </svg>
+      <div class="card-title">Buffer Action</div>
+      <div class="card-desc">Understand how buffers resist pH change through interactive scenarios.</div>
+    </a>
 
   </div>
 
