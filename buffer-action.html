@@ -759,8 +759,8 @@
           line4.innerHTML =
             "pH = " +
             system.pKa.toFixed(2) +
-            " + <span class=\"hh-value\">lg " +
-            state.logRatio.toFixed(2) +
+            " + lg <span class=\"hh-value\">" +
+            state.ratio.toFixed(2) +
             "</span> = <span class=\"hh-value\">" +
             pH.toFixed(2) +
             "</span>";
@@ -814,8 +814,8 @@
           line4.innerHTML =
             "pOH = " +
             pKb.toFixed(2) +
-            " + <span class=\"hh-value\">lg " +
-            logRatioAB.toFixed(2) +
+            " + lg <span class=\"hh-value\">" +
+            ratioAcidBase.toFixed(2) +
             "</span> = <span class=\"hh-value\">" +
             pOH.toFixed(2) +
             "</span>";
