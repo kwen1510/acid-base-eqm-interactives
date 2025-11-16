@@ -360,44 +360,57 @@
         transform: none;
       }
 
-      .button-group {
-        margin-top: 0.75rem;
+      .page-header {
         display: flex;
-        gap: 0.5rem;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
       }
 
-      .show-solution-btn,
-      .help-btn {
+      .page-header h1 {
+        flex: 1;
+        margin: 0;
+      }
+
+      .global-help-btn {
+        padding: 0.6rem 1.3rem;
+        font-size: 0.95rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent-orange);
+        background: var(--accent-orange);
+        color: #fff;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease,
+          box-shadow 150ms ease, transform 120ms ease;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .global-help-btn:hover {
+        background: var(--accent-orange-dark);
+        box-shadow: 0 8px 18px rgba(249, 115, 22, 0.3);
+        transform: translateY(-1px);
+      }
+
+      .show-solution-btn {
+        margin-top: 0.75rem;
         padding: 0.55rem 1.2rem;
         font-size: 0.9rem;
         border-radius: 999px;
+        border: 1px solid var(--accent);
+        background: #fff;
+        color: var(--accent-strong);
         cursor: pointer;
         transition: background 150ms ease, border-color 150ms ease,
           box-shadow 150ms ease, transform 120ms ease;
         font-weight: 500;
       }
 
-      .show-solution-btn {
-        border: 1px solid var(--accent);
-        background: #fff;
-        color: var(--accent-strong);
-      }
-
       .show-solution-btn:hover {
         background: var(--accent-soft);
         box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
-        transform: translateY(-1px);
-      }
-
-      .help-btn {
-        border: 1px solid var(--accent-orange);
-        background: #fff;
-        color: var(--accent-orange-dark);
-      }
-
-      .help-btn:hover {
-        background: #fff7ed;
-        box-shadow: 0 6px 14px rgba(249, 115, 22, 0.12);
         transform: translateY(-1px);
       }
 
@@ -660,6 +673,16 @@
           border-radius: 10px;
         }
 
+        .page-header {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .global-help-btn {
+          align-self: flex-end;
+        }
+
         .celebration-message {
           padding: 1.5rem 2rem;
         }
@@ -676,14 +699,19 @@
   </head>
   <body>
     <div class="app">
-      <h1>Acid–Base Algorithm – Mixed Quiz</h1>
-      <p>
-        This quiz gives you short, mental-arithmetic questions based on the
-        Level&nbsp;1 (acetic acid) and Level&nbsp;2 (ethylamine) algorithms, plus basic
-        strong acid/strong base ideas. For each scenario, decide
-        <strong>what is left in the mixture</strong> and then
-        <strong>which calculation type</strong> you should use.
-      </p>
+      <div class="page-header">
+        <div>
+          <h1>Acid–Base Algorithm – Mixed Quiz</h1>
+          <p>
+            This quiz gives you short, mental-arithmetic questions based on the
+            Level&nbsp;1 (acetic acid) and Level&nbsp;2 (ethylamine) algorithms, plus basic
+            strong acid/strong base ideas. For each scenario, decide
+            <strong>what is left in the mixture</strong> and then
+            <strong>which calculation type</strong> you should use.
+          </p>
+        </div>
+        <button class="global-help-btn" id="global-help-btn">💡 Help</button>
+      </div>
 
       <div class="layout">
         <div class="layout-left">
@@ -1392,16 +1420,6 @@
           buttons.appendChild(resetBtn);
           card.appendChild(buttons);
 
-          const buttonGroup = document.createElement("div");
-          buttonGroup.className = "button-group";
-
-          const helpBtn = document.createElement("button");
-          helpBtn.className = "help-btn";
-          helpBtn.textContent = "💡 Help";
-          helpBtn.addEventListener("click", () => {
-            openModal("Help: Thought Process", helpContent);
-          });
-
           const showSolutionBtn = document.createElement("button");
           showSolutionBtn.className = "show-solution-btn";
           showSolutionBtn.textContent = "Show solution";
@@ -1409,9 +1427,7 @@
             openModal("Solution and Working", q.workingHtml);
           });
 
-          buttonGroup.appendChild(helpBtn);
-          buttonGroup.appendChild(showSolutionBtn);
-          card.appendChild(buttonGroup);
+          card.appendChild(showSolutionBtn);
 
           quizContainer.appendChild(card);
         });
@@ -1542,6 +1558,11 @@
         });
         updateStepper();
       }
+
+      // Global help button handler
+      document.getElementById("global-help-btn").addEventListener("click", () => {
+        openModal("Help: Thought Process", helpContent);
+      });
 
       // Shuffle questions on load
       const shuffledQuestions = shuffleArray(questions);
