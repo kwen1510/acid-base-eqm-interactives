@@ -748,7 +748,7 @@
               <li>Salt hydrolysis</li>
             </ul>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; padding: 0.5rem 0.75rem; background: #fef3c7; border-left: 3px solid #f59e0b; border-radius: 4px; line-height: 1.4;">
-              <strong>Note:</strong> Salt hydrolysis is essentially weak acid/base dissociation. The key difference is you must use the given Kₐ/Kᵦ to calculate the required Kᵦ/Kₐ (via Kw), plus calculate the new concentration.
+              <strong>Note:</strong> Salt hydrolysis is essentially weak acid/base dissociation. The key difference is you must use the given K<sub>a</sub>/K<sub>b</sub> to calculate the required K<sub>b</sub>/K<sub>a</sub> (via Kw), plus calculate the new concentration.
             </p>
           </div>
 
@@ -912,7 +912,7 @@
           id: "q4",
           title: "Question 4: Weak Base",
           prompt:
-            "Calculate the pH of 0.10 mol dm⁻³ C₂H₅NH₂ solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+            "Calculate the pH of 0.10 mol dm⁻³ C₂H₅NH₂ solution. (K<sub>b</sub> for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "weak-base",
           calcAnswer: "weak-base-dissociation",
           workingHtml: `
@@ -926,9 +926,9 @@
               <tr><td>Change</td><td>-x</td><td>+x</td><td>+x</td></tr>
               <tr><td>Equilibrium</td><td>0.10 - x</td><td>x</td><td>x</td></tr>
             </table>
-            <p><strong>Kᵦ expression:</strong></p>
+            <p><strong>K<sub>b</sub> expression:</strong></p>
             <ul>
-              <li>Kᵦ = [C₂H₅NH₃⁺][OH⁻] / [C₂H₅NH₂]</li>
+              <li>K<sub>b</sub> = [C₂H₅NH₃⁺][OH⁻] / [C₂H₅NH₂]</li>
               <li>6.4 × 10⁻⁴ = x² / (0.10 - x)</li>
               <li>Assuming x << 0.10: 6.4 × 10⁻⁴ ≈ x² / 0.10</li>
               <li>x² = 6.4 × 10⁻⁵</li>
@@ -1010,7 +1010,7 @@
           id: "q7",
           title: "Question 7: Weak Base + Conjugate Acid",
           prompt:
-            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₃⁺Cl⁻. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₃⁺Cl⁻. Calculate the pH of the resulting solution. (K<sub>b</sub> for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
@@ -1027,8 +1027,8 @@
             </ul>
             <p><strong>Step 3: Use Henderson-Hasselbalch equation (base form)</strong></p>
             <ul>
-              <li>pOH = pKᵦ + lg([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
-              <li>pKᵦ = -lg(6.4 × 10⁻⁴) = 3.19</li>
+              <li>pOH = pK<sub>b</sub> + lg([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
+              <li>pK<sub>b</sub> = -lg(6.4 × 10⁻⁴) = 3.19</li>
               <li>pOH = 3.19 + lg(0.50 / 0.50)</li>
               <li>pOH = 3.19 + 0 = 3.19</li>
               <li>pH = 14 - 3.19 = <strong>10.81</strong></li>
@@ -1039,7 +1039,7 @@
           id: "q8",
           title: "Question 8: Weak Base + Strong Acid",
           prompt:
-            "Mix 70 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 30 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+            "Mix 70 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 30 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (K<sub>b</sub> for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
@@ -1067,7 +1067,7 @@
             </ul>
             <p><strong>Step 4: Use Henderson-Hasselbalch equation (base form)</strong></p>
             <ul>
-              <li>pOH = pKᵦ + lg([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
+              <li>pOH = pK<sub>b</sub> + lg([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
               <li>pOH = 3.19 + lg(0.30 / 0.40)</li>
               <li>pOH = 3.19 + lg(0.75)</li>
               <li>pOH = 3.19 - 0.12 = 3.07</li>
@@ -1106,7 +1106,7 @@
             </ul>
             <p><strong>Step 4: Hydrolysis calculation</strong></p>
             <ul>
-              <li>Find Kᵦ: Kᵦ = Kw / Kₐ = (1.0 × 10⁻¹⁴) / (1.8 × 10⁻⁵) = 5.56 × 10⁻¹⁰</li>
+              <li>Find K<sub>b</sub>: K<sub>b</sub> = Kw / K<sub>a</sub> = (1.0 × 10⁻¹⁴) / (1.8 × 10⁻⁵) = 5.56 × 10⁻¹⁰</li>
               <li>Equilibrium: CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻</li>
             </ul>
             <p><strong>ICE Table:</strong></p>
@@ -1117,7 +1117,7 @@
               <tr><td>Equilibrium</td><td>0.50 - x</td><td>x</td><td>x</td></tr>
             </table>
             <ul>
-              <li>Kᵦ = x² / (0.50 - x) ≈ x² / 0.50</li>
+              <li>K<sub>b</sub> = x² / (0.50 - x) ≈ x² / 0.50</li>
               <li>5.56 × 10⁻¹⁰ = x² / 0.50</li>
               <li>x² = 2.78 × 10⁻¹⁰</li>
               <li>x = 1.67 × 10⁻⁵ mol dm⁻³</li>
@@ -1131,7 +1131,7 @@
           id: "q10",
           title: "Question 10: Salt Hydrolysis (from weak base)",
           prompt:
-            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (K<sub>b</sub> for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "weak-acid",
           calcAnswer: "salt-hydrolysis",
           workingHtml: `
@@ -1158,7 +1158,7 @@
             </ul>
             <p><strong>Step 4: Hydrolysis calculation</strong></p>
             <ul>
-              <li>Find Kₐ: Kₐ = Kw / Kᵦ = (1.0 × 10⁻¹⁴) / (6.4 × 10⁻⁴) = 1.56 × 10⁻¹¹</li>
+              <li>Find K<sub>a</sub>: K<sub>a</sub> = Kw / K<sub>b</sub> = (1.0 × 10⁻¹⁴) / (6.4 × 10⁻⁴) = 1.56 × 10⁻¹¹</li>
               <li>Equilibrium: C₂H₅NH₃⁺ + H₂O ⇌ C₂H₅NH₂ + H⁺</li>
             </ul>
             <p><strong>ICE Table:</strong></p>
