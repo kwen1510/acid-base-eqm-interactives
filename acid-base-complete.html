@@ -540,255 +540,334 @@
       const questions = [
         {
           id: "q1",
-          title: "Scenario 1: HCl solution",
+          title: "Question 1: Strong Base",
           prompt:
-            "Calculate the pH of a 0.10 mol dm⁻³ HCl solution in water.",
-          whatLeftAnswer: "strong-acid",
-          calcAnswer: "strong-acid-ph",
+            "Calculate the pH of 0.20 mol dm⁻³ NaOH solution.",
+          whatLeftAnswer: "strong-base",
+          calcAnswer: "strong-base-ph",
           workingHtml: `
-            <p><strong>Step 1 – Identify the species.</strong></p>
+            <p><strong>Solution:</strong></p>
+            <p>NaOH is a strong base, so it completely dissociates:</p>
             <ul>
-              <li>HCl is a strong acid, so it dissociates completely to give H⁺ and Cl⁻.</li>
-              <li>No other acids/bases are present.</li>
-            </ul>
-            <p><strong>Step 2 – Work out what is left.</strong></p>
-            <ul>
-              <li>All the HCl becomes H⁺ (no weak acid or buffer pair is involved).</li>
-              <li><em>What is left?</em> A strong acid solution (H⁺ from HCl).</li>
-            </ul>
-            <p><strong>Step 3 – Choose the calculation type.</strong></p>
-            <ul>
-              <li>Since the acid is strong, [H⁺] ≈ c, so we use a <strong>strong acid pH calculation</strong> (pH = −log[H⁺]). For 0.10 mol dm⁻³, pH ≈ 1.0.</li>
+              <li>[OH⁻] = 0.20 mol dm⁻³</li>
+              <li>pOH = -log₁₀(0.20) = 0.70</li>
+              <li>pH = 14 - pOH = 14 - 0.70 = <strong>13.30</strong></li>
             </ul>
           `,
         },
         {
           id: "q2",
-          title: "Scenario 2: NaOH solution",
+          title: "Question 2: Strong Acid",
           prompt:
-            "We place 50 cm³ of 0.20 mol dm⁻³ NaOH in water and dilute to 500 cm³.",
-          whatLeftAnswer: "strong-base",
-          calcAnswer: "strong-base-ph",
+            "Calculate the pH of 0.10 mol dm⁻³ HCl solution.",
+          whatLeftAnswer: "strong-acid",
+          calcAnswer: "strong-acid-ph",
           workingHtml: `
-            <p><strong>Step 1 – Identify the species.</strong></p>
+            <p><strong>Solution:</strong></p>
+            <p>HCl is a strong acid, so it completely dissociates:</p>
             <ul>
-              <li>NaOH is a strong base, so it dissociates completely to give OH⁻ and Na⁺.</li>
-              <li>No weak acid/base pair is involved.</li>
-            </ul>
-            <p><strong>Step 2 – Work out what is left.</strong></p>
-            <ul>
-              <li>All the NaOH becomes OH⁻.</li>
-              <li><em>What is left?</em> A strong base solution (OH⁻ from NaOH).</li>
-            </ul>
-            <p><strong>Step 3 – Choose the calculation type.</strong></p>
-            <ul>
-              <li>We treat this as a <strong>strong base pH calculation</strong>: find [OH⁻] from the dilution, then pOH, then pH.</li>
+              <li>[H⁺] = 0.10 mol dm⁻³</li>
+              <li>pH = -log₁₀(0.10) = <strong>1.00</strong></li>
             </ul>
           `,
         },
         {
           id: "q3",
-          title: "Scenario 3: CH₃COOH in water",
+          title: "Question 3: Weak Acid",
           prompt:
-            "We place 100 cm³ of 0.10 mol dm⁻³ CH₃COOH in water.",
+            "Calculate the pH of 0.10 mol dm⁻³ CH₃COOH solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
           whatLeftAnswer: "weak-acid",
           calcAnswer: "weak-acid-dissociation",
           workingHtml: `
-            <p><strong>Step 1 – Identify the species.</strong></p>
+            <p><strong>Solution:</strong></p>
+            <p>CH₃COOH is a weak acid, so it partially dissociates.</p>
+            <p><strong>Equilibrium:</strong> CH₃COOH ⇌ H⁺ + CH₃COO⁻</p>
+            <p><strong>ICE Table:</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>CH₃COOH</th><th>H⁺</th><th>CH₃COO⁻</th></tr>
+              <tr><td>Initial</td><td>0.10</td><td>0</td><td>0</td></tr>
+              <tr><td>Change</td><td>-x</td><td>+x</td><td>+x</td></tr>
+              <tr><td>Equilibrium</td><td>0.10 - x</td><td>x</td><td>x</td></tr>
+            </table>
+            <p><strong>Kₐ expression:</strong></p>
             <ul>
-              <li>CH₃COOH is a weak acid with Kₐ ≈ 1.8 × 10⁻⁵.</li>
-              <li>There is no strong base to react with it and no CH₃COO⁻ present initially.</li>
-            </ul>
-            <p><strong>Step 2 – Work out what is left.</strong></p>
-            <ul>
-              <li>Since nothing reacts with CH₃COOH first, the only acid present is the weak acid itself.</li>
-              <li><em>What is left?</em> A weak acid solution (CH₃COOH in water).</li>
-            </ul>
-            <p><strong>Step 3 – Choose the calculation type.</strong></p>
-            <ul>
-              <li>We treat this as a <strong>weak acid dissociation</strong> problem using an ICE table and Kₐ for CH₃COOH.</li>
+              <li>Kₐ = [H⁺][CH₃COO⁻] / [CH₃COOH]</li>
+              <li>1.8 × 10⁻⁵ = x² / (0.10 - x)</li>
+              <li>Assuming x << 0.10: 1.8 × 10⁻⁵ ≈ x² / 0.10</li>
+              <li>x² = 1.8 × 10⁻⁶</li>
+              <li>x = 1.34 × 10⁻³ mol dm⁻³</li>
+              <li>[H⁺] = 1.34 × 10⁻³ mol dm⁻³</li>
+              <li>pH = -log₁₀(1.34 × 10⁻³) = <strong>2.87</strong></li>
             </ul>
           `,
         },
         {
           id: "q4",
-          title: "Scenario 4: C₂H₅NH₂ in water",
+          title: "Question 4: Weak Base",
           prompt:
-            "We place 100 cm³ of 0.10 mol dm⁻³ C₂H₅NH₂ (ethylamine) in water.",
+            "Calculate the pH of 0.10 mol dm⁻³ C₂H₅NH₂ solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "weak-base",
           calcAnswer: "weak-base-dissociation",
           workingHtml: `
-            <p><strong>Step 1 – Identify the species.</strong></p>
+            <p><strong>Solution:</strong></p>
+            <p>C₂H₅NH₂ is a weak base, so it partially dissociates.</p>
+            <p><strong>Equilibrium:</strong> C₂H₅NH₂ + H₂O ⇌ C₂H₅NH₃⁺ + OH⁻</p>
+            <p><strong>ICE Table:</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>C₂H₅NH₂</th><th>C₂H₅NH₃⁺</th><th>OH⁻</th></tr>
+              <tr><td>Initial</td><td>0.10</td><td>0</td><td>0</td></tr>
+              <tr><td>Change</td><td>-x</td><td>+x</td><td>+x</td></tr>
+              <tr><td>Equilibrium</td><td>0.10 - x</td><td>x</td><td>x</td></tr>
+            </table>
+            <p><strong>Kᵦ expression:</strong></p>
             <ul>
-              <li>C₂H₅NH₂ is a weak base with K_b ≈ 6.4 × 10⁻⁴.</li>
-              <li>There is no strong acid to convert it fully to C₂H₅NH₃⁺.</li>
-            </ul>
-            <p><strong>Step 2 – Work out what is left.</strong></p>
-            <ul>
-              <li>The only basic species is the weak base C₂H₅NH₂.</li>
-              <li><em>What is left?</em> A weak base solution.</li>
-            </ul>
-            <p><strong>Step 3 – Choose the calculation type.</strong></p>
-            <ul>
-              <li>We model C₂H₅NH₂ + H₂O ⇌ C₂H₅NH₃⁺ + OH⁻ and use a <strong>weak base dissociation</strong> calculation with K_b.</li>
+              <li>Kᵦ = [C₂H₅NH₃⁺][OH⁻] / [C₂H₅NH₂]</li>
+              <li>6.4 × 10⁻⁴ = x² / (0.10 - x)</li>
+              <li>Assuming x << 0.10: 6.4 × 10⁻⁴ ≈ x² / 0.10</li>
+              <li>x² = 6.4 × 10⁻⁵</li>
+              <li>x = 8.0 × 10⁻³ mol dm⁻³</li>
+              <li>[OH⁻] = 8.0 × 10⁻³ mol dm⁻³</li>
+              <li>pOH = -log₁₀(8.0 × 10⁻³) = 2.10</li>
+              <li>pH = 14 - 2.10 = <strong>11.90</strong></li>
             </ul>
           `,
         },
         {
           id: "q5",
-          title: "Scenario 5: 50 cm³ NaOH + 100 cm³ HCl",
+          title: "Question 5: Weak Acid + Conjugate Base",
           prompt:
-            "We mix 50 cm³ of 0.10 mol dm⁻³ NaOH with 100 cm³ of 0.10 mol dm⁻³ HCl.",
-          whatLeftAnswer: "strong-acid",
-          calcAnswer: "strong-acid-ph",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ CH₃COOH with 50 cm³ of 1.0 mol dm⁻³ CH₃COO⁻Na⁺. Calculate the pH of the resulting solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
+          whatLeftAnswer: "buffer-acid",
+          calcAnswer: "buffer",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Determine what's present</strong></p>
             <ul>
-              <li>n(NaOH) = 0.10 × (50/1000) = 0.0050 mol.</li>
-              <li>n(HCl) = 0.10 × (100/1000) = 0.0100 mol.</li>
+              <li>CH₃COOH and CH₃COO⁻ do not react with each other</li>
+              <li>After mixing: both weak acid and conjugate base are present → Buffer solution</li>
             </ul>
-            <p><strong>Step 2 – Reaction and excess.</strong></p>
+            <p><strong>Step 2: Calculate concentrations after mixing</strong></p>
             <ul>
-              <li>Reaction: HCl + OH⁻ → H₂O + Cl⁻ (goes to completion).</li>
-              <li>NaOH is limiting (0.0050 mol), so it is used up.</li>
-              <li>Excess HCl left = 0.0100 − 0.0050 = 0.0050 mol.</li>
+              <li>Total volume = 50 + 50 = 100 cm³</li>
+              <li>[CH₃COOH] = (1.0 × 50) / 100 = 0.50 mol dm⁻³</li>
+              <li>[CH₃COO⁻] = (1.0 × 50) / 100 = 0.50 mol dm⁻³</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Use Henderson-Hasselbalch equation</strong></p>
             <ul>
-              <li><em>What is left?</em> A strong acid solution (excess HCl).</li>
-              <li>We therefore use a <strong>strong acid pH calculation</strong>, treating [H⁺] as coming from the excess HCl over the total volume.</li>
+              <li>pH = pKₐ + log₁₀([CH₃COO⁻] / [CH₃COOH])</li>
+              <li>pKₐ = -log₁₀(1.8 × 10⁻⁵) = 4.74</li>
+              <li>pH = 4.74 + log₁₀(0.50 / 0.50)</li>
+              <li>pH = 4.74 + 0 = <strong>4.74</strong></li>
             </ul>
           `,
         },
         {
           id: "q6",
-          title: "Scenario 6: 100 cm³ NaOH + 50 cm³ HCl",
+          title: "Question 6: Weak Acid + Strong Base",
           prompt:
-            "We mix 100 cm³ of 0.10 mol dm⁻³ NaOH with 50 cm³ of 0.10 mol dm⁻³ HCl.",
-          whatLeftAnswer: "strong-base",
-          calcAnswer: "strong-base-ph",
+            "Mix 70 cm³ of 1.0 mol dm⁻³ CH₃COOH with 30 cm³ of 1.0 mol dm⁻³ NaOH. Calculate the pH of the resulting solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
+          whatLeftAnswer: "buffer-acid",
+          calcAnswer: "buffer",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Initial reaction (strong base reacts completely with weak acid)</strong></p>
             <ul>
-              <li>n(NaOH) = 0.10 × (100/1000) = 0.0100 mol.</li>
-              <li>n(HCl) = 0.10 × (50/1000) = 0.0050 mol.</li>
+              <li>Moles CH₃COOH = 1.0 × 0.070 = 0.070 mol</li>
+              <li>Moles NaOH = 1.0 × 0.030 = 0.030 mol</li>
+              <li>Reaction: CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O</li>
             </ul>
-            <p><strong>Step 2 – Reaction and excess.</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>CH₃COOH</th><th>OH⁻</th><th>CH₃COO⁻</th></tr>
+              <tr><td>Initial (mol)</td><td>0.070</td><td>0.030</td><td>0</td></tr>
+              <tr><td>Change (mol)</td><td>-0.030</td><td>-0.030</td><td>+0.030</td></tr>
+              <tr><td>Final (mol)</td><td>0.040</td><td>0</td><td>0.030</td></tr>
+            </table>
+            <p><strong>Step 2: What's left?</strong></p>
             <ul>
-              <li>HCl + OH⁻ → H₂O + Cl⁻ (complete).</li>
-              <li>HCl is limiting (0.0050 mol), so it is used up.</li>
-              <li>Excess OH⁻ from NaOH = 0.0100 − 0.0050 = 0.0050 mol.</li>
+              <li>Excess CH₃COOH and CH₃COO⁻ formed → Buffer solution</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Calculate concentrations</strong></p>
             <ul>
-              <li><em>What is left?</em> A strong base solution (excess NaOH).</li>
-              <li>We use a <strong>strong base pH calculation</strong>, finding [OH⁻] from the excess moles over the total volume.</li>
+              <li>Total volume = 70 + 30 = 100 cm³ = 0.100 dm³</li>
+              <li>[CH₃COOH] = 0.040 / 0.100 = 0.40 mol dm⁻³</li>
+              <li>[CH₃COO⁻] = 0.030 / 0.100 = 0.30 mol dm⁻³</li>
+            </ul>
+            <p><strong>Step 4: Use Henderson-Hasselbalch equation</strong></p>
+            <ul>
+              <li>pH = pKₐ + log₁₀([CH₃COO⁻] / [CH₃COOH])</li>
+              <li>pH = 4.74 + log₁₀(0.30 / 0.40)</li>
+              <li>pH = 4.74 + log₁₀(0.75)</li>
+              <li>pH = 4.74 - 0.12 = <strong>4.62</strong></li>
             </ul>
           `,
         },
         {
           id: "q7",
-          title: "Scenario 7: 70 cm³ CH₃COOH + 30 cm³ NaOH",
+          title: "Question 7: Weak Base + Conjugate Acid",
           prompt:
-            "We mix 70 cm³ of 1.0 mol dm⁻³ CH₃COOH with 30 cm³ of 1.0 mol dm⁻³ NaOH.",
-          whatLeftAnswer: "buffer-acid",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₃⁺Cl⁻. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+          whatLeftAnswer: "buffer-base",
           calcAnswer: "buffer",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Determine what's present</strong></p>
             <ul>
-              <li>n(CH₃COOH) = 1.0 × (70/1000) = 0.070 mol.</li>
-              <li>n(NaOH) = 1.0 × (30/1000) = 0.030 mol.</li>
+              <li>C₂H₅NH₂ and C₂H₅NH₃⁺ do not react with each other</li>
+              <li>After mixing: both weak base and conjugate acid are present → Buffer solution</li>
             </ul>
-            <p><strong>Step 2 – Reaction with strong base.</strong></p>
+            <p><strong>Step 2: Calculate concentrations after mixing</strong></p>
             <ul>
-              <li>Reaction: CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O (essentially complete).</li>
-              <li>NaOH is limiting, so 0.030 mol of CH₃COOH is neutralised.</li>
-              <li>Left: n(CH₃COOH) = 0.070 − 0.030 = 0.040 mol; n(CH₃COO⁻) formed = 0.030 mol.</li>
+              <li>Total volume = 50 + 50 = 100 cm³</li>
+              <li>[C₂H₅NH₂] = (1.0 × 50) / 100 = 0.50 mol dm⁻³</li>
+              <li>[C₂H₅NH₃⁺] = (1.0 × 50) / 100 = 0.50 mol dm⁻³</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Use Henderson-Hasselbalch equation (base form)</strong></p>
             <ul>
-              <li><em>What is left?</em> Both weak acid CH₃COOH and its conjugate base CH₃COO⁻.</li>
-              <li>This is a <strong>buffer pair</strong>, so we use a <strong>buffer calculation</strong> (often via the Henderson–Hasselbalch equation for pH).</li>
+              <li>pOH = pKᵦ + log₁₀([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
+              <li>pKᵦ = -log₁₀(6.4 × 10⁻⁴) = 3.19</li>
+              <li>pOH = 3.19 + log₁₀(0.50 / 0.50)</li>
+              <li>pOH = 3.19 + 0 = 3.19</li>
+              <li>pH = 14 - 3.19 = <strong>10.81</strong></li>
             </ul>
           `,
         },
         {
           id: "q8",
-          title: "Scenario 8: 30 cm³ CH₃COOH + 70 cm³ NaOH",
+          title: "Question 8: Weak Base + Strong Acid",
           prompt:
-            "We mix 30 cm³ of 1.0 mol dm⁻³ CH₃COOH with 70 cm³ of 1.0 mol dm⁻³ NaOH.",
-          whatLeftAnswer: "weak-base",
-          calcAnswer: "salt-hydrolysis",
+            "Mix 70 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 30 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
+          whatLeftAnswer: "buffer-base",
+          calcAnswer: "buffer",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Initial reaction (strong acid reacts completely with weak base)</strong></p>
             <ul>
-              <li>n(CH₃COOH) = 1.0 × (30/1000) = 0.030 mol.</li>
-              <li>n(NaOH) = 1.0 × (70/1000) = 0.070 mol.</li>
+              <li>Moles C₂H₅NH₂ = 1.0 × 0.070 = 0.070 mol</li>
+              <li>Moles HCl = 1.0 × 0.030 = 0.030 mol</li>
+              <li>Reaction: C₂H₅NH₂ + H⁺ → C₂H₅NH₃⁺</li>
             </ul>
-            <p><strong>Step 2 – Reaction with strong base.</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>C₂H₅NH₂</th><th>H⁺</th><th>C₂H₅NH₃⁺</th></tr>
+              <tr><td>Initial (mol)</td><td>0.070</td><td>0.030</td><td>0</td></tr>
+              <tr><td>Change (mol)</td><td>-0.030</td><td>-0.030</td><td>+0.030</td></tr>
+              <tr><td>Final (mol)</td><td>0.040</td><td>0</td><td>0.030</td></tr>
+            </table>
+            <p><strong>Step 2: What's left?</strong></p>
             <ul>
-              <li>CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O (complete).</li>
-              <li>CH₃COOH is limiting, so it is completely used up.</li>
-              <li>After neutralisation of 0.030 mol CH₃COOH, there are 0.030 mol CH₃COO⁻ formed.</li>
-              <li>We then imagine all remaining strong base is neutralised by a small extra amount of strong acid so that only CH₃COO⁻ acts as a weak base in water.</li>
+              <li>Excess C₂H₅NH₂ and C₂H₅NH₃⁺ formed → Buffer solution</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Calculate concentrations</strong></p>
             <ul>
-              <li>For the equilibrium model, we focus on CH₃COO⁻ in water.</li>
-              <li><em>What is left (for the model)?</em> A weak base (the conjugate base CH₃COO⁻).</li>
-              <li>This corresponds to a <strong>salt hydrolysis</strong> problem, because the salt of a weak acid (CH₃COO⁻) hydrolyses with water to make OH⁻.</li>
+              <li>Total volume = 70 + 30 = 100 cm³ = 0.100 dm³</li>
+              <li>[C₂H₅NH₂] = 0.040 / 0.100 = 0.40 mol dm⁻³</li>
+              <li>[C₂H₅NH₃⁺] = 0.030 / 0.100 = 0.30 mol dm⁻³</li>
+            </ul>
+            <p><strong>Step 4: Use Henderson-Hasselbalch equation (base form)</strong></p>
+            <ul>
+              <li>pOH = pKᵦ + log₁₀([C₂H₅NH₃⁺] / [C₂H₅NH₂])</li>
+              <li>pOH = 3.19 + log₁₀(0.30 / 0.40)</li>
+              <li>pOH = 3.19 + log₁₀(0.75)</li>
+              <li>pOH = 3.19 - 0.12 = 3.07</li>
+              <li>pH = 14 - 3.07 = <strong>10.93</strong></li>
             </ul>
           `,
         },
         {
           id: "q9",
-          title: "Scenario 9: 70 cm³ C₂H₅NH₂ + 30 cm³ HCl",
+          title: "Question 9: Salt Hydrolysis (from weak acid)",
           prompt:
-            "We mix 70 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 30 cm³ of 1.0 mol dm⁻³ HCl.",
-          whatLeftAnswer: "buffer-base",
-          calcAnswer: "buffer",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ CH₃COOH with 50 cm³ of 1.0 mol dm⁻³ NaOH. Calculate the pH of the resulting solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
+          whatLeftAnswer: "weak-base",
+          calcAnswer: "salt-hydrolysis",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Initial reaction (complete neutralization)</strong></p>
             <ul>
-              <li>n(C₂H₅NH₂) = 1.0 × (70/1000) = 0.070 mol.</li>
-              <li>n(HCl) = 1.0 × (30/1000) = 0.030 mol.</li>
+              <li>Moles CH₃COOH = 1.0 × 0.050 = 0.050 mol</li>
+              <li>Moles NaOH = 1.0 × 0.050 = 0.050 mol</li>
+              <li>Reaction: CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O</li>
             </ul>
-            <p><strong>Step 2 – Reaction with strong acid.</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>CH₃COOH</th><th>OH⁻</th><th>CH₃COO⁻</th></tr>
+              <tr><td>Initial (mol)</td><td>0.050</td><td>0.050</td><td>0</td></tr>
+              <tr><td>Change (mol)</td><td>-0.050</td><td>-0.050</td><td>+0.050</td></tr>
+              <tr><td>Final (mol)</td><td>0</td><td>0</td><td>0.050</td></tr>
+            </table>
+            <p><strong>Step 2: What's left?</strong></p>
             <ul>
-              <li>Reaction: C₂H₅NH₂ + H⁺ → C₂H₅NH₃⁺ (essentially complete).</li>
-              <li>HCl is limiting, so 0.030 mol of C₂H₅NH₂ is protonated.</li>
-              <li>Left: n(C₂H₅NH₂) = 0.070 − 0.030 = 0.040 mol; n(C₂H₅NH₃⁺) formed = 0.030 mol.</li>
+              <li>Only CH₃COO⁻ remains → Salt hydrolysis</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Calculate concentration</strong></p>
             <ul>
-              <li><em>What is left?</em> Both weak base C₂H₅NH₂ and its conjugate acid C₂H₅NH₃⁺.</li>
-              <li>This is a <strong>buffer pair</strong>, so we use a <strong>buffer calculation</strong> in the base form (pOH = pK_b + log([acid]/[base])).</li>
+              <li>Total volume = 50 + 50 = 100 cm³ = 0.100 dm³</li>
+              <li>[CH₃COO⁻] = 0.050 / 0.100 = 0.50 mol dm⁻³</li>
+            </ul>
+            <p><strong>Step 4: Hydrolysis calculation</strong></p>
+            <ul>
+              <li>Find Kᵦ: Kᵦ = Kw / Kₐ = (1.0 × 10⁻¹⁴) / (1.8 × 10⁻⁵) = 5.56 × 10⁻¹⁰</li>
+              <li>Equilibrium: CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻</li>
+            </ul>
+            <p><strong>ICE Table:</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>CH₃COO⁻</th><th>CH₃COOH</th><th>OH⁻</th></tr>
+              <tr><td>Initial</td><td>0.50</td><td>0</td><td>0</td></tr>
+              <tr><td>Change</td><td>-x</td><td>+x</td><td>+x</td></tr>
+              <tr><td>Equilibrium</td><td>0.50 - x</td><td>x</td><td>x</td></tr>
+            </table>
+            <ul>
+              <li>Kᵦ = x² / (0.50 - x) ≈ x² / 0.50</li>
+              <li>5.56 × 10⁻¹⁰ = x² / 0.50</li>
+              <li>x² = 2.78 × 10⁻¹⁰</li>
+              <li>x = 1.67 × 10⁻⁵ mol dm⁻³</li>
+              <li>[OH⁻] = 1.67 × 10⁻⁵ mol dm⁻³</li>
+              <li>pOH = -log₁₀(1.67 × 10⁻⁵) = 4.78</li>
+              <li>pH = 14 - 4.78 = <strong>9.22</strong></li>
             </ul>
           `,
         },
         {
           id: "q10",
-          title: "Scenario 10: 30 cm³ C₂H₅NH₂ + 70 cm³ HCl",
+          title: "Question 10: Salt Hydrolysis (from weak base)",
           prompt:
-            "We mix 30 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 70 cm³ of 1.0 mol dm⁻³ HCl.",
+            "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
           whatLeftAnswer: "weak-acid",
           calcAnswer: "salt-hydrolysis",
           workingHtml: `
-            <p><strong>Step 1 – Calculate moles.</strong></p>
+            <p><strong>Step 1: Initial reaction (complete neutralization)</strong></p>
             <ul>
-              <li>n(C₂H₅NH₂) = 1.0 × (30/1000) = 0.030 mol.</li>
-              <li>n(HCl) = 1.0 × (70/1000) = 0.070 mol.</li>
+              <li>Moles C₂H₅NH₂ = 1.0 × 0.050 = 0.050 mol</li>
+              <li>Moles HCl = 1.0 × 0.050 = 0.050 mol</li>
+              <li>Reaction: C₂H₅NH₂ + H⁺ → C₂H₅NH₃⁺</li>
             </ul>
-            <p><strong>Step 2 – Reaction with strong acid.</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>C₂H₅NH₂</th><th>H⁺</th><th>C₂H₅NH₃⁺</th></tr>
+              <tr><td>Initial (mol)</td><td>0.050</td><td>0.050</td><td>0</td></tr>
+              <tr><td>Change (mol)</td><td>-0.050</td><td>-0.050</td><td>+0.050</td></tr>
+              <tr><td>Final (mol)</td><td>0</td><td>0</td><td>0.050</td></tr>
+            </table>
+            <p><strong>Step 2: What's left?</strong></p>
             <ul>
-              <li>C₂H₅NH₂ + H⁺ → C₂H₅NH₃⁺ (complete).</li>
-              <li>C₂H₅NH₂ is limiting, so it is completely converted to C₂H₅NH₃⁺.</li>
-              <li>For the equilibrium model, we focus on C₂H₅NH₃⁺ in water as a weak acid.</li>
+              <li>Only C₂H₅NH₃⁺ remains → Salt hydrolysis</li>
             </ul>
-            <p><strong>Step 3 – What is left and which calculation?</strong></p>
+            <p><strong>Step 3: Calculate concentration</strong></p>
             <ul>
-              <li><em>What is left (for the model)?</em> A weak acid (the conjugate acid C₂H₅NH₃⁺).</li>
-              <li>This corresponds to a <strong>salt hydrolysis</strong> problem, because the conjugate acid C₂H₅NH₃⁺ hydrolyses to give H⁺.</li>
+              <li>Total volume = 50 + 50 = 100 cm³ = 0.100 dm³</li>
+              <li>[C₂H₅NH₃⁺] = 0.050 / 0.100 = 0.50 mol dm⁻³</li>
+            </ul>
+            <p><strong>Step 4: Hydrolysis calculation</strong></p>
+            <ul>
+              <li>Find Kₐ: Kₐ = Kw / Kᵦ = (1.0 × 10⁻¹⁴) / (6.4 × 10⁻⁴) = 1.56 × 10⁻¹¹</li>
+              <li>Equilibrium: C₂H₅NH₃⁺ + H₂O ⇌ C₂H₅NH₂ + H⁺</li>
+            </ul>
+            <p><strong>ICE Table:</strong></p>
+            <table style="width:100%; border-collapse: collapse; margin: 0.5rem 0;">
+              <tr><th></th><th>C₂H₅NH₃⁺</th><th>C₂H₅NH₂</th><th>H⁺</th></tr>
+              <tr><td>Initial</td><td>0.50</td><td>0</td><td>0</td></tr>
+              <tr><td>Change</td><td>-x</td><td>+x</td><td>+x</td></tr>
+              <tr><td>Equilibrium</td><td>0.50 - x</td><td>x</td><td>x</td></tr>
+            </table>
+            <ul>
+              <li>Kₐ = x² / (0.50 - x) ≈ x² / 0.50</li>
+              <li>1.56 × 10⁻¹¹ = x² / 0.50</li>
+              <li>x² = 7.8 × 10⁻¹²</li>
+              <li>x = 2.79 × 10⁻⁶ mol dm⁻³</li>
+              <li>[H⁺] = 2.79 × 10⁻⁶ mol dm⁻³</li>
+              <li>pH = -log₁₀(2.79 × 10⁻⁶) = <strong>5.55</strong></li>
             </ul>
           `,
         },
