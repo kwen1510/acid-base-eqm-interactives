@@ -581,14 +581,13 @@
           </ul>
 
           <div class="section">
-            <h3>Possible “what is left” answers</h3>
+            <h3>Possible "what is left" answers</h3>
             <ul class="pill-list">
               <li>Strong base</li>
               <li>Strong acid</li>
               <li>Weak acid</li>
               <li>Weak base</li>
-              <li>Both weak acid and conjugate base</li>
-              <li>Both weak base and conjugate acid</li>
+              <li>Weak acid/base with conjugate base/acid</li>
             </ul>
           </div>
 
@@ -642,12 +641,8 @@
         { value: "weak-acid", label: "Weak acid" },
         { value: "weak-base", label: "Weak base" },
         {
-          value: "buffer-acid",
-          label: "Both weak acid and conjugate base",
-        },
-        {
-          value: "buffer-base",
-          label: "Both weak base and conjugate acid",
+          value: "buffer",
+          label: "Weak acid/base with conjugate base/acid",
         },
       ];
 
@@ -760,7 +755,7 @@
           title: "Question 5: Weak Acid + Conjugate Base",
           prompt:
             "Mix 50 cm³ of 1.0 mol dm⁻³ CH₃COOH with 50 cm³ of 1.0 mol dm⁻³ CH₃COO⁻Na⁺. Calculate the pH of the resulting solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
-          whatLeftAnswer: "buffer-acid",
+          whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
             <p><strong>Step 1: Determine what's present</strong></p>
@@ -788,7 +783,7 @@
           title: "Question 6: Weak Acid + Strong Base",
           prompt:
             "Mix 70 cm³ of 1.0 mol dm⁻³ CH₃COOH with 30 cm³ of 1.0 mol dm⁻³ NaOH. Calculate the pH of the resulting solution. (Kₐ for CH₃COOH = 1.8 × 10⁻⁵)",
-          whatLeftAnswer: "buffer-acid",
+          whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
             <p><strong>Step 1: Initial reaction (strong base reacts completely with weak acid)</strong></p>
@@ -827,7 +822,7 @@
           title: "Question 7: Weak Base + Conjugate Acid",
           prompt:
             "Mix 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 50 cm³ of 1.0 mol dm⁻³ C₂H₅NH₃⁺Cl⁻. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
-          whatLeftAnswer: "buffer-base",
+          whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
             <p><strong>Step 1: Determine what's present</strong></p>
@@ -856,7 +851,7 @@
           title: "Question 8: Weak Base + Strong Acid",
           prompt:
             "Mix 70 cm³ of 1.0 mol dm⁻³ C₂H₅NH₂ with 30 cm³ of 1.0 mol dm⁻³ HCl. Calculate the pH of the resulting solution. (Kᵦ for C₂H₅NH₂ = 6.4 × 10⁻⁴)",
-          whatLeftAnswer: "buffer-base",
+          whatLeftAnswer: "buffer",
           calcAnswer: "buffer",
           workingHtml: `
             <p><strong>Step 1: Initial reaction (strong acid reacts completely with weak base)</strong></p>
@@ -1241,10 +1236,8 @@
 
       function openModal(title, content) {
         const modal = document.getElementById("solution-modal");
-        const modalTitle = document.getElementById("modal-title");
         const modalBody = document.getElementById("modal-body");
 
-        modalTitle.textContent = title;
         modalBody.innerHTML = content;
         modal.classList.add("visible");
       }
