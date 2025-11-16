@@ -23,5 +23,10 @@
     "title": "Dissociation step-by-step",
     "description": "Understand the steps behind weak acid and base dissociation, building on top of our equilibrium concepts",
     "href": "dissociation.html"
+  },
+  {
+    "title": "Acid-Base Complete",
+    "description": "Comprehensive quiz covering all acid-base equilibrium calculations",
+    "href": "acid-base-complete.html"
   }
 ]
