@@ -1,4 +1,9 @@
-[
+[  
+  {
+    "title": "Dissociation step-by-step",
+    "description": "Understand the steps behind weak acid and base dissociation, building on top of our equilibrium concepts",
+    "href": "dissociation.html"
+  },
   {
     "title": "Weak Acid Algorithms",
     "description": "ICE tables, Ka expressions, small-x approximations, and pH calculations.",
@@ -15,18 +20,13 @@
     "href": "buffer-action.html"
   },
   {
+    "title": "Acid-Base Equilibria Quiz",
+    "description": "Comprehensive quiz covering acid-base equilibria algorithms",
+    "href": "acid-base-complete.html"
+  },
+  {
     "title": "pH and Temperature",
     "description": "Explore how pH changes with temperature",
     "href": "ph-and-temp.html"
-  },
-  {
-    "title": "Dissociation step-by-step",
-    "description": "Understand the steps behind weak acid and base dissociation, building on top of our equilibrium concepts",
-    "href": "dissociation.html"
-  },
-  {
-    "title": "Acid-Base Equilibria Quiz",
-    "description": "Comprehensive quiz covering all acid-base equilibrium calculations",
-    "href": "acid-base-complete.html"
   }
 ]
