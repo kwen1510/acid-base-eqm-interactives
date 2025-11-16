@@ -360,23 +360,44 @@
         transform: none;
       }
 
-      .show-solution-btn {
+      .button-group {
         margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .show-solution-btn,
+      .help-btn {
         padding: 0.55rem 1.2rem;
         font-size: 0.9rem;
         border-radius: 999px;
-        border: 1px solid var(--accent);
-        background: #fff;
-        color: var(--accent-strong);
         cursor: pointer;
         transition: background 150ms ease, border-color 150ms ease,
           box-shadow 150ms ease, transform 120ms ease;
         font-weight: 500;
       }
 
+      .show-solution-btn {
+        border: 1px solid var(--accent);
+        background: #fff;
+        color: var(--accent-strong);
+      }
+
       .show-solution-btn:hover {
         background: var(--accent-soft);
         box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+        transform: translateY(-1px);
+      }
+
+      .help-btn {
+        border: 1px solid var(--accent-orange);
+        background: #fff;
+        color: var(--accent-orange-dark);
+      }
+
+      .help-btn:hover {
+        background: #fff7ed;
+        box-shadow: 0 6px 14px rgba(249, 115, 22, 0.12);
         transform: translateY(-1px);
       }
 
@@ -751,6 +772,46 @@
         { value: "buffer", label: "Buffer calculation" },
         { value: "salt-hydrolysis", label: "Salt hydrolysis" },
       ];
+
+      const helpContent = `
+        <h3>Thought Process for Solving These Questions</h3>
+        <p><strong>Step 1: Identify what you're given</strong></p>
+        <ul>
+          <li>Look at the chemicals provided and their concentrations</li>
+          <li>Check if they're acids, bases, or salts</li>
+          <li>Note if they're strong or weak</li>
+        </ul>
+
+        <p><strong>Step 2: Determine if a reaction occurs</strong></p>
+        <ul>
+          <li>If you have a strong acid + strong base: complete neutralization</li>
+          <li>If you have a weak acid + strong base: reaction forms conjugate base</li>
+          <li>If you have a weak base + strong acid: reaction forms conjugate acid</li>
+          <li>Calculate moles to see if anything is in excess</li>
+        </ul>
+
+        <p><strong>Step 3: Identify what's left in solution</strong></p>
+        <ul>
+          <li><strong>Strong acid or base only?</strong> → Simple strong acid/base pH</li>
+          <li><strong>Weak acid or base only?</strong> → Weak acid/base dissociation</li>
+          <li><strong>Both weak acid and conjugate base?</strong> → Buffer solution</li>
+          <li><strong>Both weak base and conjugate acid?</strong> → Buffer solution</li>
+          <li><strong>Only conjugate base (from weak acid)?</strong> → Salt hydrolysis (basic)</li>
+          <li><strong>Only conjugate acid (from weak base)?</strong> → Salt hydrolysis (acidic)</li>
+        </ul>
+
+        <p><strong>Step 4: Choose the correct calculation method</strong></p>
+        <ul>
+          <li><strong>Strong acid/base:</strong> pH = -log[H⁺] or pH = 14 - pOH</li>
+          <li><strong>Weak acid/base:</strong> ICE table with Ka or Kb</li>
+          <li><strong>Buffer:</strong> Henderson-Hasselbalch equation</li>
+          <li><strong>Salt hydrolysis:</strong> Calculate Kb or Ka from Kw, then use ICE table</li>
+        </ul>
+
+        <p style="margin-top: 1rem; padding: 0.75rem; background: #fef3c7; border-left: 3px solid #f59e0b; border-radius: 4px;">
+          <strong>💡 Key Tip:</strong> Always ask yourself "What species are actually present in solution after any reactions?" This will guide you to the correct calculation type!
+        </p>
+      `;
 
       const questions = [
         {
@@ -1148,11 +1209,10 @@
           }</span>`;
           card.appendChild(meta);
 
-          const title = document.createElement("h2");
-          title.textContent = q.title;
-          card.appendChild(title);
-
           const prompt = document.createElement("p");
+          prompt.style.fontSize = "1.05rem";
+          prompt.style.fontWeight = "500";
+          prompt.style.marginTop = "0.5rem";
           prompt.textContent = q.prompt;
           card.appendChild(prompt);
 
@@ -1332,23 +1392,47 @@
           buttons.appendChild(resetBtn);
           card.appendChild(buttons);
 
-          const showSolutionBtn = document.createElement("button");
-          showSolutionBtn.className = "show-solution-btn";
-          showSolutionBtn.textContent = "Show solution and working";
-          showSolutionBtn.addEventListener("click", () => {
-            openModal(q.title, q.workingHtml);
+          const buttonGroup = document.createElement("div");
+          buttonGroup.className = "button-group";
+
+          const helpBtn = document.createElement("button");
+          helpBtn.className = "help-btn";
+          helpBtn.textContent = "💡 Help";
+          helpBtn.addEventListener("click", () => {
+            openModal("Help: Thought Process", helpContent);
           });
 
-          card.appendChild(showSolutionBtn);
+          const showSolutionBtn = document.createElement("button");
+          showSolutionBtn.className = "show-solution-btn";
+          showSolutionBtn.textContent = "Show solution";
+          showSolutionBtn.addEventListener("click", () => {
+            openModal("Solution and Working", q.workingHtml);
+          });
+
+          buttonGroup.appendChild(helpBtn);
+          buttonGroup.appendChild(showSolutionBtn);
+          card.appendChild(buttonGroup);
 
           quizContainer.appendChild(card);
         });
       }
 
+      // Shuffle array function
+      function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
       function openModal(title, content) {
         const modal = document.getElementById("solution-modal");
+        const modalTitle = document.getElementById("modal-title");
         const modalBody = document.getElementById("modal-body");
 
+        modalTitle.textContent = title;
         modalBody.innerHTML = content;
         modal.classList.add("visible");
       }
@@ -1458,6 +1542,12 @@
         });
         updateStepper();
       }
+
+      // Shuffle questions on load
+      const shuffledQuestions = shuffleArray(questions);
+      // Replace the original questions array with shuffled version
+      questions.length = 0;
+      questions.push(...shuffledQuestions);
 
       renderStepper();
       renderQuestions();
