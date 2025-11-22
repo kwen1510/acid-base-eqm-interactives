@@ -593,15 +593,14 @@
             <div class="hint-card">
               <div class="hint-badge">
                 <span class="hint-badge-dot"></span>
-                <span>Always check after solving</span>
+                <span>Key assumption</span>
               </div>
               <p>
-                We often assume <em>x</em> is negligible compared with the
-                initial concentration to simplify
-                K&nbsp;=&nbsp;<em>x</em><sup>2</sup>/C₀. This is only valid if
-                the % dissociation is small (typically below about 5&nbsp;%).
-                The final step reminds you what to do when you are given pH or
-                when the approximation breaks down.
+                Weak acids and weak bases undergo partial dissociation. We
+                assume <em>x</em> is much smaller than the initial
+                concentration (<em>x</em> ≪ C₀) to simplify
+                K&nbsp;=&nbsp;<em>x</em><sup>2</sup>/C₀. This allows us to use
+                the square-root expression for calculating [H⁺] or [OH⁻].
               </p>
             </div>
           </div>
@@ -823,9 +822,7 @@
                 </p>
                 <p class="muted">
                   This turns the denominator into a constant and gives us a
-                  much simpler expression. We will <strong>check</strong> at the
-                  end that the % dissociation is indeed small enough for this
-                  approximation to be valid.
+                  much simpler expression.
                 </p>
               `,
             },
@@ -874,22 +871,22 @@
                 <p>
                   This gives
                   <span class="equation">
-                    [H⁺] ≈ ${formatNumber(hApprox, 3)} mol dm⁻³
+                    [H⁺] ≈ 1.34 × 10<sup>−3</sup> mol dm⁻³
                   </span>
                   .
                 </p>
                 <p class="muted">
                   This <strong>x</strong> value came from our simplified (small
-                  <em>x</em>) expression. We will check shortly that it is
-                  indeed small compared to 0.10 mol dm⁻³.
+                  <em>x</em>) expression, where we assumed
+                  <em>x</em> ≪ 0.10 mol dm⁻³.
                 </p>
               `,
             },
             {
               id: "acid-9-solve-ph",
               label: "Find pH",
-              caption: "Convert [H⁺] to pH and check % dissociation.",
-              title: "Calculate the pH and check the assumption",
+              caption: "Convert [H⁺] to pH.",
+              title: "Calculate the pH",
               tag: "Calculation",
               body: `
                 <p>Convert [H⁺] into pH:</p>
@@ -898,29 +895,16 @@
                     pH = −lg[H⁺] ≈ ${formatNumber(pHApprox, 2)}
                   </span>
                 </p>
-                <p>Now check the small‑<em>x</em> assumption:</p>
-                <p>
-                  <span class="equation">
-                    % dissociation = [H⁺] / C₀ × 100
-                    ≈ ${formatNumber(hApprox, 3)} / 0.10 × 100
-                    ≈ ${formatNumber(percentDissociated, 1)} %
-                  </span>
-                </p>
                 <p class="muted">
-                  A dissociation of about
-                  ${formatNumber(
-                    percentDissociated,
-                    1
-                  )}% is comfortably below 5&nbsp;%, so treating
-                  <em>x</em> as negligible compared with 0.10 mol dm⁻³ is
-                  justified.
+                  This calculation used the small‑<em>x</em> approximation,
+                  where we assumed <em>x</em> ≪ 0.10 mol dm⁻³.
                 </p>
               `,
             },
             {
               id: "acid-10-disclaimer",
               label: "When not to assume",
-              caption: "What if you already know pH or x is not small?",
+              caption: "What if you already know pH?",
               title: "When you would not use the small‑x shortcut",
               tag: "Extensions",
               body: `
@@ -939,16 +923,8 @@
                   </li>
                   <li>
                     There is <strong>no need</strong> to assume that
-                    <span class="equation">x ≪ 0.10</span> in that situation.
+                    <span class="equation">x ≪ C₀</span> in that situation.
                   </li>
-                </ul>
-                <p>
-                  More generally, if the % dissociation works out to be large
-                  (say above 5&nbsp;%), you should:
-                </p>
-                <ul>
-                  <li>Go back to the exact K<sub>a</sub> expression, and</li>
-                  <li>solve the full quadratic instead of using √(K<sub>a</sub>C₀).</li>
                 </ul>
                 <p class="muted">
                   The same logic will appear again in the weak base mode &mdash;
@@ -1161,7 +1137,7 @@
                 <p>
                   This gives
                   <span class="equation">
-                    [OH⁻] ≈ ${formatNumber(ohApprox, 3)} mol dm⁻³
+                    [OH⁻] ≈ 1.34 × 10<sup>−3</sup> mol dm⁻³
                   </span>
                   .
                 </p>
@@ -1176,8 +1152,8 @@
             {
               id: "base-9-solve-ph",
               label: "Find pH",
-              caption: "Convert pOH to pH and check % dissociation.",
-              title: "Calculate pH and check the assumption",
+              caption: "Convert pOH to pH.",
+              title: "Calculate pH",
               tag: "Calculation",
               body: `
                 <p>Use pH + pOH = 14.00 (at 25&nbsp;°C):</p>
@@ -1189,28 +1165,16 @@
                     )} ≈ ${formatNumber(pH, 2)}
                   </span>
                 </p>
-                <p>Check the small‑<em>x</em> assumption:</p>
-                <p>
-                  <span class="equation">
-                    % reaction = [OH⁻] / C₀ × 100
-                    ≈ ${formatNumber(ohApprox, 3)} / 0.10 × 100
-                    ≈ ${formatNumber(percentDissociated, 1)} %
-                  </span>
-                </p>
                 <p class="muted">
-                  Again, the dissociation is only about
-                  ${formatNumber(
-                    percentDissociated,
-                    1
-                  )}%, so treating <em>x</em> as negligible compared with
-                  0.10 mol dm⁻³ is reasonable.
+                  This calculation used the small‑<em>x</em> approximation,
+                  where we assumed <em>x</em> ≪ 0.10 mol dm⁻³.
                 </p>
               `,
             },
             {
               id: "base-10-disclaimer",
               label: "When not to assume",
-              caption: "pH given, very dilute or relatively strong bases.",
+              caption: "What if you already know pH?",
               title: "When you would not use the shortcut",
               tag: "Extensions",
               body: `
@@ -1221,23 +1185,10 @@
                   expression without assuming
                   <span class="equation">x ≪ C₀</span>.
                 </p>
-                <p>Also beware of:</p>
-                <ul>
-                  <li>Very dilute solutions (small C₀), or</li>
-                  <li>Bases with relatively large K<sub>b</sub>.</li>
-                </ul>
-                <p>
-                  In those cases the % reaction may no longer be small. Then you
-                  should:
-                </p>
-                <ul>
-                  <li>Use the full expression with <span class="equation">0.10 − x</span>, and</li>
-                  <li>Solve the quadratic for <em>x</em> instead of using √(K<sub>b</sub>C₀).</li>
-                </ul>
                 <p class="muted">
                   The structure of the reasoning is identical to the weak acid
-                  example: ICE table → equilibrium expression → (maybe) small‑x
-                  approximation → check that the approximation was justified.
+                  example: ICE table → equilibrium expression → small‑x
+                  approximation (when pH is not given).
                 </p>
               `,
             },

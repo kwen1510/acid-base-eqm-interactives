@@ -499,11 +499,36 @@
           <div class="section">
             <h2>5. Big idea</h2>
             <p class="small-muted">
-              As temperature increases, K<sub>w</sub> becomes larger. Both
-              [H<sup>+</sup>] and [OH<sup>&minus;</sup>] increase together, so
-              pH drops below 7.00 but the solution remains neutral because
+              As temperature changes, K<sub>w</sub> changes. pH will change but
+              for pure water it is still neutral because
               [H<sup>+</sup>] = [OH<sup>&minus;</sup>].
             </p>
+          </div>
+
+          <div class="section">
+            <h2>pH Reference</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>pH Range</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>pH = <span id="neutral-ph-ref">7.00</span> (at <span id="temp-ref">25</span>&nbsp;&deg;C)</td>
+                  <td>Neutral pH</td>
+                </tr>
+                <tr>
+                  <td>pH &lt; <span id="acidic-ph-ref">7.00</span> (at <span id="temp-ref-2">25</span>&nbsp;&deg;C)</td>
+                  <td>Acidic pH</td>
+                </tr>
+                <tr>
+                  <td>pH &gt; <span id="alkaline-ph-ref">7.00</span> (at <span id="temp-ref-3">25</span>&nbsp;&deg;C)</td>
+                  <td>Alkaline pH</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -535,6 +560,12 @@
         const pkwNumber = document.getElementById("pkw-number");
         const neutralNote = document.getElementById("neutral-note");
         const resetBtn = document.getElementById("reset-temp-btn");
+        const neutralPhRef = document.getElementById("neutral-ph-ref");
+        const acidicPhRef = document.getElementById("acidic-ph-ref");
+        const alkalinePhRef = document.getElementById("alkaline-ph-ref");
+        const tempRef = document.getElementById("temp-ref");
+        const tempRef2 = document.getElementById("temp-ref-2");
+        const tempRef3 = document.getElementById("temp-ref-3");
 
         const log10 =
           Math.log10 ||
@@ -600,6 +631,14 @@
             tempC +
             " \u00b0C, pure water is neutral because [H\u207a] = [OH\u207b].";
           neutralNote.textContent = neutralText;
+
+          // Update pH reference table
+          if (neutralPhRef) neutralPhRef.textContent = pH.toFixed(2);
+          if (acidicPhRef) acidicPhRef.textContent = pH.toFixed(2);
+          if (alkalinePhRef) alkalinePhRef.textContent = pH.toFixed(2);
+          if (tempRef) tempRef.textContent = tempC.toString();
+          if (tempRef2) tempRef2.textContent = tempC.toString();
+          if (tempRef3) tempRef3.textContent = tempC.toString();
         }
 
         tempSlider.addEventListener("input", update);
